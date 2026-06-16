@@ -1,0 +1,75 @@
+{
+  "entities": {
+    "Lead": {
+      "title": "Lead",
+      "description": "Customer inquiry lead captured through the premium simulator",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Full name of the prospect"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Email address of the prospect"
+        },
+        "company": {
+          "type": "string",
+          "description": "Company name of the prospect"
+        },
+        "selectedExperience": {
+          "type": "string",
+          "enum": [
+            "Love Story Experience",
+            "Birthday Experience",
+            "Proposal Experience",
+            "Wedding Experience",
+            "Memorial Experience",
+            "Custom Experience"
+          ],
+          "description": "The selected experience type"
+        },
+        "budgetRange": {
+          "type": "string",
+          "description": "The budget bracket chosen by the client"
+        },
+        "projectDescription": {
+          "type": "string",
+          "description": "Description of the client's custom requirements"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "new",
+            "qualified",
+            "proposal_sent",
+            "won",
+            "lost"
+          ],
+          "description": "Current status in the premium CRM pipeline"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Submission timestamp"
+        }
+      },
+      "required": [
+        "name",
+        "email",
+        "selectedExperience",
+        "budgetRange",
+        "projectDescription",
+        "status",
+        "createdAt"
+      ]
+    }
+  },
+  "firestore": {
+    "leads/{leadId}": {
+      "schema": "Lead",
+      "description": "A collection of captured customer leads"
+    }
+  }
+}

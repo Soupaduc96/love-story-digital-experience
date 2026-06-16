@@ -1,0 +1,6 @@
+{
+  "name": "Digital Experiences",
+  "description": "Créez et prévisualisez des expériences web immersives et personnalisées pour célébrer vos moments précieux (Love Story, Anniversaire, Demande en mariage...). Explorez nos formules et personnalisez votre projet.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

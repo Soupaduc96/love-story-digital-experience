@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,450&family=Montserrat:wght@100;200;300;400;500;600;700&family=Playfair+Display:ital,wght@0,450;0,550;0,650;1,450&family=JetBrains+Mono:wght@100;200;300;400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-brand-gold: #a1824a;
+  --color-brand-dark: #050505;
+  --color-card-dark: #111111;
+  --color-card-dark-alt: #161616;
+  --font-serif: "Cormorant Garamond", "Playfair Display", "Georgia", serif;
+  --font-sans: "Montserrat", "Inter", "Helvetica Neue", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+@layer utilities {
+  /* Premium ultra-thin custom scrollbar for luxury dashboards */
+  .hidden-scrollbar::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  .hidden-scrollbar::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.4);
+  }
+  .hidden-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(161, 130, 74, 0.35);
+    border-radius: 99px;
+  }
+  .hidden-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(161, 130, 74, 0.6);
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: #050505;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #050505;
+  color: #ebebeb;
+}

@@ -1,0 +1,77 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 1. Global Catch-All Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // 3. Path Variable Hardening
+    function isValidId(id) { 
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); 
+    }
+    
+    // Hardened global helpers
+    function incoming() { 
+      return request.resource.data; 
+    }
+    
+    function existing() { 
+      return resource.data; 
+    }
+
+    function isTerminalState(status) {
+      return status == 'won' || status == 'lost';
+    }
+
+    // 2. Validation Blueprints (Schema correctness and value restrictions)
+    function isValidLead(data) {
+      return data.keys().hasAll(['name', 'email', 'company', 'selectedExperience', 'budgetRange', 'projectDescription', 'status', 'createdAt'])
+        && data.keys().size() == 8
+        && data.name is string && data.name.size() > 0 && data.name.size() <= 100
+        && data.email is string && data.email.size() > 0 && data.email.size() <= 100
+        && data.company is string && data.company.size() > 0 && data.company.size() <= 100
+        && data.selectedExperience is string
+        && (data.selectedExperience == 'Love Story Experience' ||
+            data.selectedExperience == 'Birthday Experience' ||
+            data.selectedExperience == 'Proposal Experience' ||
+            data.selectedExperience == 'Wedding Experience' ||
+            data.selectedExperience == 'Memorial Experience' ||
+            data.selectedExperience == 'Custom Experience')
+        && data.budgetRange is string
+        && (data.budgetRange == '$99 - $249' ||
+            data.budgetRange == '$249 - $500' ||
+            data.budgetRange == '$500+')
+        && data.projectDescription is string && data.projectDescription.size() > 0 && data.projectDescription.size() <= 5000
+        && data.status is string
+        && (data.status == 'new' ||
+            data.status == 'qualified' ||
+            data.status == 'proposal_sent' ||
+            data.status == 'won' ||
+            data.status == 'lost')
+        && data.createdAt is string && data.createdAt.size() > 0 && data.createdAt.size() <= 100;
+    }
+
+    // Leads collection match definitions
+    match /leads/{leadId} {
+      // Direct access & listing
+      allow get: if isValidId(leadId);
+      allow list: if true; // Listing allowed to populate the CRM administration lists
+
+      // 10. Prevention of "Denial of Wallet" via rapid validations
+      allow create: if isValidId(leadId) && isValidLead(incoming());
+
+      // 4. Tiered Identity/Action Update: only Status can be modified
+      allow update: if isValidId(leadId) 
+        && isValidLead(incoming())
+        // 6. Terminal State Locking: once 'won' or 'lost', no further modifications can be made
+        && !isTerminalState(existing().status)
+        // Ensure no other values like description are modified
+        && incoming().diff(existing()).affectedKeys().hasOnly(['status']);
+
+      // Archival capabilities
+      allow delete: if isValidId(leadId);
+    }
+  }
+}
