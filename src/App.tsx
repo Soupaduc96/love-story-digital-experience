@@ -80,8 +80,8 @@ export default function App() {
            `📱 WHATSAPP : ${formData.whatsapp || "Non spécifié"}\n` +
            `💎 FORMULE : ${formulaLabel}\n` +
            `⚡ LIVRAISON : ${isExpress ? `EXPRESS (${expressType.toUpperCase()})` : "STANDARD"}\n\n` +
-           `📝 DETAIL DU COUPLE :\n` +
-           `• Prénom du Partenaire : ${formData.partnerName || "Non spécifié"}\n` +
+           `📝 DETAILS DE LA PERSONNE CÉLÉBRÉE :\n` +
+           `• Personne à célébrer : ${formData.partnerName || "Non spécifié"}\n` +
            `• Date de Remise : ${formData.deliveryDate || "Non spécifié"}\n` +
            `• Projet : "${formData.projectDescription || "Non spécifié"}"\n\n` +
            `📎 DOCUMENTS JOINTS :\n` +
@@ -111,7 +111,7 @@ export default function App() {
         selectedExperience: "Love Story Experience",
         budgetRange: formData.formula === "essential" ? "$49" : formData.formula === "premium" ? "$99" : "$199",
         desiredDeliveryDate: formData.deliveryDate,
-        projectDescription: `Partenaire: ${formData.partnerName}. Détails: ${formData.projectDescription}. Photos: ${photos.length}. Vidéos: ${videos.length}${isExpress ? `. Livraison Express: ${expressType} Express` : ''}`
+        projectDescription: `Personne célébrée: ${formData.partnerName}. Détails: ${formData.projectDescription}. Photos: ${photos.length}. Vidéos: ${videos.length}${isExpress ? `. Livraison Express: ${expressType} Express` : ''}`
       });
     } catch (err) {
       console.warn("Storage fallback warning:", err);
@@ -135,6 +135,19 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#140A0D] text-[#F8F4EE] font-sans selection:bg-[#D4B483]/30 relative overflow-x-hidden antialiased">
       
+      {/* Global Background Image (input_file_2.png) with a premium luxury overlay */}
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden select-none">
+        <img 
+          src="/input_file_2.png" 
+          alt="Luxury romantic background atmosphere" 
+          className="w-full h-full object-cover object-center scale-[1.03] opacity-15 saturate-[0.60] brightness-[0.70] filter blur-[1px]"
+          referrerPolicy="no-referrer"
+        />
+        {/* Soft elegant burgundy vignette overlay to ensure pristine contrast and legibility */}
+        <div className="absolute inset-0 bg-radial-gradient from-transparent via-[#2A1018]/85 to-[#140A0D]"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#140A0D] via-transparent to-[#140A0D] mix-blend-multiply"></div>
+      </div>
+
       {/* Golden luxury ambient backdrop glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1400px] h-[800px] bg-[radial-gradient(circle_at_50%_0%,rgba(212,180,131,0.15)_0%,rgba(74,21,37,0.3)_45%,transparent_75%)] pointer-events-none z-0"></div>
 
@@ -176,37 +189,111 @@ export default function App() {
       <main className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* 2. HERO SECTION */}
-        <section id="accueil" className="text-center py-20 sm:py-28 md:py-32 max-w-4xl mx-auto space-y-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#D4B483]/10 border border-[#D4B483]/25 rounded-full text-[10px] tracking-[0.15em] text-[#D4B483] uppercase font-semibold">
-            <Sparkles className="w-3.5 h-3.5 text-[#E7C9A9]" /> L'EXCELLENCE DE L'AMOUR DIGITAL
+        <section id="accueil" className="relative py-12 sm:py-20 lg:py-28 overflow-hidden rounded-3xl">
+          
+          {/* Full-height atmospheric portrait background of Kai (first portrait photo) */}
+          <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden rounded-3xl">
+            <img 
+              src="/input_file_0.png" 
+              alt="Luxury background atmosphere" 
+              className="w-full h-full object-cover object-top opacity-30 scale-105"
+              referrerPolicy="no-referrer"
+            />
+            {/* Burgundy Overlay (75%) and Gradient overlay from left to right to preserve contrast */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#140A0D]/95 via-[#2A1018]/85 to-[#140A0D]/70 mix-blend-multiply"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-[#140A0D] via-[#2A1018]/30 to-[#140A0D]"></div>
           </div>
 
-          <div className="space-y-4">
-            <h1 className="text-4xl sm:text-6xl md:text-7xl font-serif tracking-tight text-[#F8F4EE] leading-tight font-normal">
-              DIGITAL LOVE<br/><span className="text-[#D4B483] italic">EXPERIENCE™</span>
-            </h1>
-            <p className="text-base sm:text-lg text-[#F8F4EE] font-serif italic max-w-3xl mx-auto opacity-90">
-              Des expériences digitales personnalisées pour célébrer votre histoire d'amour.
-            </p>
-            <div className="w-12 h-[1px] bg-[#D4B483]/30 mx-auto my-6"></div>
-            <p className="text-sm sm:text-base text-[#CFC4B5] max-w-2xl mx-auto leading-relaxed">
-              Anniversaire, surprise romantique, demande en mariage ou souvenir unique.
-              Nous transformons vos plus beaux moments en une expérience digitale élégante et inoubliable.
-            </p>
-          </div>
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            
+            {/* Left Content Column styled with soft glassmorphism blur for maximum text readability */}
+            <div className="lg:col-span-7 text-center lg:text-left space-y-6 sm:space-y-8 p-6 sm:p-10 bg-[#140A0D]/40 backdrop-blur-md rounded-3xl border border-white/5 shadow-2xl">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#D4B483]/10 border border-[#D4B483]/25 rounded-full text-[10px] tracking-[0.15em] text-[#D4B483] uppercase font-semibold">
+                <Sparkles className="w-3.5 h-3.5 text-[#E7C9A9]" /> L'EXCELLENCE DE L'AMOUR DIGITAL
+              </div>
 
-          <div className="pt-6 flex justify-center">
-            <a
-              href="#reservations"
-              className="px-8 py-4 bg-gradient-to-r from-[#D4B483] to-[#E7C9A9] hover:from-[#E7C9A9] hover:to-[#F8F4EE] text-[#140A0D] font-bold text-[11px] tracking-widest uppercase rounded shadow-[0_8px_30px_rgba(212,180,131,0.25)] transition-all duration-300 flex items-center gap-2 group hover:scale-[1.02]"
-            >
-              Réserver Mon Expérience
-              <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
-            </a>
+              <div className="space-y-4">
+                <h1 className="text-4xl sm:text-6xl md:text-7xl font-serif tracking-tight text-[#F8F4EE] leading-tight font-normal">
+                  DIGITAL LOVE<br/><span className="text-[#D4B483] italic">EXPERIENCE™</span>
+                </h1>
+                <p className="text-base sm:text-lg text-[#F8F4EE] font-serif italic max-w-2xl mx-auto lg:mx-0 opacity-90">
+                  Transformez vos plus beaux souvenirs en une expérience digitale inoubliable.
+                </p>
+                <div className="w-12 h-[1px] bg-[#D4B483]/30 mx-auto lg:mx-0 my-6"></div>
+                <p className="text-sm sm:text-base text-[#CFC4B5] max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                  Anniversaire, hommage, surprise, célébration, remerciement ou occasion spéciale.
+                  Nous transformons vos souvenirs les plus précieux en un écrin interactif, élégant et mémorable.
+                </p>
+              </div>
+
+              <div className="pt-2 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                <a
+                  href="#reservations"
+                  className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-[#D4B483] to-[#E7C9A9] hover:from-[#E7C9A9] hover:to-[#F8F4EE] text-[#140A0D] font-bold text-[11px] tracking-widest uppercase rounded-xl shadow-[0_8px_30px_rgba(212,180,131,0.35)] transition-all duration-300 flex items-center justify-center gap-2 group hover:scale-[1.03]"
+                >
+                  ❤️ Créer Notre Histoire
+                  <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                </a>
+                <a
+                  href="#reservations"
+                  className="w-full sm:w-auto px-8 py-4 bg-transparent hover:bg-[#D4B483]/10 text-[#D4B483] border border-[#D4B483]/40 hover:border-[#D4B483] font-bold text-[11px] tracking-widest uppercase rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
+                >
+                  ❤️ Je Réserve Mon Expérience
+                </a>
+              </div>
+
+              {/* Under CTA features badge section */}
+              <div className="pt-2 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-6 text-[10px] font-mono tracking-wider text-[#E7C9A9]">
+                <span className="flex items-center gap-1.5 bg-[#4A1525]/25 px-4 py-2 rounded-full border border-[#D4B483]/15">
+                  ✨ Réponse sous 24h
+                </span>
+                <span className="flex items-center gap-1.5 bg-[#4A1525]/25 px-4 py-2 rounded-full border border-[#D4B483]/15">
+                  ✨ Création 100% personnalisée
+                </span>
+                <span className="flex items-center gap-1.5 bg-[#4A1525]/25 px-4 py-2 rounded-full border border-[#D4B483]/15">
+                  ✨ À partir de 49$
+                </span>
+              </div>
+            </div>
+
+            {/* Right Image Frame Column (Strongest photo input_file_0.png in premium frame) */}
+            <div className="lg:col-span-5 flex justify-center">
+              <div className="relative group max-w-sm sm:max-w-md w-full">
+                
+                {/* Backglow shadow effect */}
+                <div className="absolute -inset-1.5 bg-gradient-to-r from-[#D4B483] to-[#E7C9A9] rounded-[2rem] blur opacity-25 group-hover:opacity-45 transition duration-1000"></div>
+                
+                {/* Main luxury frame */}
+                <div className="relative p-3 bg-gradient-to-br from-[#2A1018] to-[#4A1525] rounded-[1.8rem] border border-[#D4B483]/20 shadow-2xl overflow-hidden">
+                  
+                  {/* Subtle golden glare overlay */}
+                  <div className="absolute -inset-y-12 -inset-x-0 w-[200%] bg-gradient-to-r from-transparent via-[#E7C9A9]/5 to-transparent -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-out"></div>
+                  
+                  {/* Thin gold inner frame */}
+                  <div className="p-1 border border-[#D4B483]/30 rounded-[1.4rem]">
+                    <div className="relative overflow-hidden rounded-[1.2rem] aspect-[3/4] bg-[#140A0D] shadow-inner">
+                      <img
+                        src="/input_file_0.png"
+                        alt="Kai Portrait"
+                        className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
+                        referrerPolicy="no-referrer"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Aesthetic luxury gold ornament overlays inside the frame margins */}
+                <div className="absolute top-4 left-4 w-4 h-4 border-t border-l border-[#D4B483]/60 pointer-events-none"></div>
+                <div className="absolute top-4 right-4 w-4 h-4 border-t border-r border-[#D4B483]/60 pointer-events-none"></div>
+                <div className="absolute bottom-4 left-4 w-4 h-4 border-b border-l border-[#D4B483]/60 pointer-events-none"></div>
+                <div className="absolute bottom-4 right-4 w-4 h-4 border-b border-r border-[#D4B483]/60 pointer-events-none"></div>
+              </div>
+            </div>
+
           </div>
 
           {/* Luxury scroll indicator */}
-          <div className="pt-12 sm:pt-16 flex flex-col items-center justify-center gap-1.5 text-[#CFC4B5]/60 hover:text-[#D4B483] transition-colors">
+          <div className="pt-16 sm:pt-20 flex flex-col items-center justify-center gap-1.5 text-[#CFC4B5]/60 hover:text-[#D4B483] transition-colors relative z-10">
             <a href="#formules" className="text-[10px] font-mono tracking-widest uppercase select-none">
               DÉCOUVRIR NOS FORMULES
             </a>
@@ -214,10 +301,72 @@ export default function App() {
           </div>
         </section>
 
+
+        {/* POUR QUI ? SECTION */}
+        <section className="py-20 border-t border-white/5 relative">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[250px] bg-[radial-gradient(circle,rgba(212,180,131,0.04)_0%,transparent_70%)] pointer-events-none z-0"></div>
+          
+          <div className="text-center space-y-2 mb-12 relative z-10">
+            <span className="text-[10px] font-mono tracking-widest text-[#D4B483] uppercase font-bold">Célébrer sans limites</span>
+            <h2 className="text-3xl md:text-5xl font-serif text-[#F8F4EE] font-normal tracking-tight">POUR QUI ?</h2>
+            <div className="w-10 h-[1px] bg-[#D4B483]/50 mx-auto mt-4"></div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 relative z-10">
+            <div className="p-5 rounded-2xl bg-gradient-to-br from-[#2A1018]/60 to-[#4A1525]/60 border border-[#D4B483]/15 flex items-center gap-4 hover:border-[#D4B483]/40 transition-all shadow-[0_10px_25px_rgba(0,0,0,0.3)]">
+              <span className="text-2xl shrink-0">❤️</span>
+              <span className="font-serif text-sm text-[#F8F4EE] font-medium">Pour votre partenaire</span>
+            </div>
+            <div className="p-5 rounded-2xl bg-gradient-to-br from-[#2A1018]/60 to-[#4A1525]/60 border border-[#D4B483]/15 flex items-center gap-4 hover:border-[#D4B483]/40 transition-all shadow-[0_10px_25px_rgba(0,0,0,0.3)]">
+              <span className="text-2xl shrink-0">👩</span>
+              <span className="font-serif text-sm text-[#F8F4EE] font-medium">Pour votre maman</span>
+            </div>
+            <div className="p-5 rounded-2xl bg-gradient-to-br from-[#2A1018]/60 to-[#4A1525]/60 border border-[#D4B483]/15 flex items-center gap-4 hover:border-[#D4B483]/40 transition-all shadow-[0_10px_25px_rgba(0,0,0,0.3)]">
+              <span className="text-2xl shrink-0">👨</span>
+              <span className="font-serif text-sm text-[#F8F4EE] font-medium">Pour votre papa</span>
+            </div>
+            <div className="p-5 rounded-2xl bg-gradient-to-br from-[#2A1018]/60 to-[#4A1525]/60 border border-[#D4B483]/15 flex items-center gap-4 hover:border-[#D4B483]/40 transition-all shadow-[0_10px_25px_rgba(0,0,0,0.3)]">
+              <span className="text-2xl shrink-0">🙋‍♀️</span>
+              <span className="font-serif text-sm text-[#F8F4EE] font-medium">Pour votre sœur</span>
+            </div>
+            <div className="p-5 rounded-2xl bg-gradient-to-br from-[#2A1018]/60 to-[#4A1525]/60 border border-[#D4B483]/15 flex items-center gap-4 hover:border-[#D4B483]/40 transition-all shadow-[0_10px_25px_rgba(0,0,0,0.3)]">
+              <span className="text-2xl shrink-0">🙋‍♂️</span>
+              <span className="font-serif text-sm text-[#F8F4EE] font-medium">Pour votre frère</span>
+            </div>
+            <div className="p-5 rounded-2xl bg-gradient-to-br from-[#2A1018]/60 to-[#4A1525]/60 border border-[#D4B483]/15 flex items-center gap-4 hover:border-[#D4B483]/40 transition-all shadow-[0_10px_25px_rgba(0,0,0,0.3)]">
+              <span className="text-2xl shrink-0">🫂</span>
+              <span className="font-serif text-sm text-[#F8F4EE] font-medium">Pour votre meilleur(e) ami(e)</span>
+            </div>
+            <div className="p-5 rounded-2xl bg-gradient-to-br from-[#2A1018]/60 to-[#4A1525]/60 border border-[#D4B483]/15 flex items-center gap-4 hover:border-[#D4B483]/40 transition-all shadow-[0_10px_25px_rgba(0,0,0,0.3)]">
+              <span className="text-2xl shrink-0">🎂</span>
+              <span className="font-serif text-sm text-[#F8F4EE] font-medium">Pour un anniversaire</span>
+            </div>
+            <div className="p-5 rounded-2xl bg-gradient-to-br from-[#2A1018]/60 to-[#4A1525]/60 border border-[#D4B483]/15 flex items-center gap-4 hover:border-[#D4B483]/40 transition-all shadow-[0_10px_25px_rgba(0,0,0,0.3)]">
+              <span className="text-2xl shrink-0">🎓</span>
+              <span className="font-serif text-sm text-[#F8F4EE] font-medium">Pour remercier quelqu'un de spécial</span>
+            </div>
+            <div className="p-5 rounded-2xl bg-gradient-to-br from-[#2A1018]/60 to-[#4A1525]/60 border border-[#D4B483]/15 flex items-center gap-4 hover:border-[#D4B483]/40 transition-all shadow-[0_10px_25px_rgba(0,0,0,0.3)] col-span-1 sm:col-span-2 lg:col-span-3 max-w-lg mx-auto w-full">
+              <span className="text-2xl shrink-0">✨</span>
+              <span className="font-serif text-sm text-[#F8F4EE] font-medium">Pour toute personne que vous aimez et appréciez</span>
+            </div>
+          </div>
+        </section>
+
         {/* 3. PRICING SECTION */}
-        <section id="formules" className="py-16 space-y-12 border-t border-white/5 relative">
-          {/* Subtle luxurious background romantic glow */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] bg-[radial-gradient(circle,rgba(212,180,131,0.06)_0%,transparent_70%)] pointer-events-none z-0"></div>
+        <section id="formules" className="py-16 space-y-12 border-t border-white/5 relative overflow-hidden rounded-3xl">
+          
+          {/* Faded luxurious background portrait of Kai (second photo) with absolute position */}
+          <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+            <img 
+              src="/input_file_1.png" 
+              alt="Faded luxury romantic backdrop" 
+              className="absolute right-0 top-1/2 -translate-y-1/2 w-full md:w-3/4 max-w-2xl h-auto object-cover opacity-12 mix-blend-overlay saturate-50 brightness-75 filter blur-[1px]"
+              referrerPolicy="no-referrer"
+            />
+            {/* Burgundy radial vignette overlay to make cards pop out flawlessly */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#140A0D] via-[#2A1018]/45 to-[#140A0D]"></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[350px] bg-[radial-gradient(circle,rgba(212,180,131,0.06)_0%,transparent_70%)]"></div>
+          </div>
 
           <div className="text-center space-y-2 relative z-10">
             <span className="text-[10px] font-mono tracking-widest text-[#D4B483] uppercase font-bold">L'Art de notre Maison</span>
@@ -225,7 +374,53 @@ export default function App() {
             <div className="w-10 h-[1px] bg-[#D4B483]/50 mx-auto mt-4"></div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
+          {/* POURQUOI OFFRIR UNE DIGITAL LOVE EXPERIENCE ? Sales Section */}
+          <div className="max-w-4xl mx-auto bg-gradient-to-br from-[#2A1018]/65 to-[#4A1525]/65 border border-[#D4B483]/20 rounded-3xl p-6 sm:p-10 my-6 relative z-10 shadow-[0_15px_35px_rgba(0,0,0,0.4)] overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[#D4B483]/5 to-transparent pointer-events-none"></div>
+            <div className="text-center space-y-2 mb-8">
+              <span className="text-[9px] font-mono tracking-[0.2em] text-[#D4B483] uppercase font-bold">L'Émotion Éternelle</span>
+              <h3 className="text-xl sm:text-2xl font-serif text-[#F8F4EE] tracking-tight font-normal uppercase">
+                POURQUOI OFFRIR UNE DIGITAL LOVE EXPERIENCE ?
+              </h3>
+              <div className="w-10 h-[1px] bg-[#D4B483]/30 mx-auto mt-3"></div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 text-sm">
+              <div className="flex items-start gap-3.5 bg-[#140A0D]/50 border border-[#D4B483]/10 p-4 rounded-xl hover:border-[#D4B483]/30 transition-all">
+                <span className="text-[#D4B483] font-bold text-base shrink-0">✔</span>
+                <div className="space-y-1">
+                  <h4 className="font-serif font-semibold text-[#F8F4EE]">Un cadeau unique et personnel</h4>
+                  <p className="text-xs text-[#CFC4B5] leading-relaxed">Conçu sur mesure pour refléter au plus près l'essence et la poésie de la personne célébrée.</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3.5 bg-[#140A0D]/50 border border-[#D4B483]/10 p-4 rounded-xl hover:border-[#D4B483]/30 transition-all">
+                <span className="text-[#D4B483] font-bold text-base shrink-0">✔</span>
+                <div className="space-y-1">
+                  <h4 className="font-serif font-semibold text-[#F8F4EE]">Une surprise qui reste accessible pour toujours</h4>
+                  <p className="text-xs text-[#CFC4B5] leading-relaxed">Hébergée en toute sécurité, accessible en un instant à tout moment de votre vie.</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3.5 bg-[#140A0D]/50 border border-[#D4B483]/10 p-4 rounded-xl hover:border-[#D4B483]/30 transition-all">
+                <span className="text-[#D4B483] font-bold text-base shrink-0">✔</span>
+                <div className="space-y-1">
+                  <h4 className="font-serif font-semibold text-[#F8F4EE]">Une manière originale de célébrer votre histoire</h4>
+                  <p className="text-xs text-[#CFC4B5] leading-relaxed">Bien plus qu'un objet, offrez une véritable mise en scène interactive de vos souvenirs.</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3.5 bg-[#140A0D]/50 border border-[#D4B483]/10 p-4 rounded-xl hover:border-[#D4B483]/30 transition-all">
+                <span className="text-[#D4B483] font-bold text-base shrink-0">✔</span>
+                <div className="space-y-1">
+                  <h4 className="font-serif font-semibold text-[#F8F4EE]">Un souvenir que la personne qui compte pour vous n'oubliera jamais</h4>
+                  <p className="text-xs text-[#CFC4B5] leading-relaxed">Suscitez des larmes de joie et de nostalgie avec l'écrin numérique le plus raffiné du web.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10 pt-6">
             
             {/* ESSENTIAL Formula */}
             <div className="bg-gradient-to-br from-[#2A1018] to-[#4A1525] border border-[#D4B483]/20 p-8 rounded-2xl flex flex-col justify-between hover:border-[#D4B483]/45 hover:shadow-[0_15px_35px_rgba(212,180,131,0.08)] transition-all duration-300 relative overflow-hidden">
@@ -252,7 +447,7 @@ export default function App() {
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
-                    <span>Message romantique</span>
+                    <span>Message personnalisé (amour, amitié, hommage...)</span>
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
@@ -274,15 +469,15 @@ export default function App() {
                     : "bg-transparent text-[#D4B483] border border-[#D4B483]/35 hover:bg-[#D4B483]/10"
                 }`}
               >
-                Choisir Essential &bull; 49$
+                Créer Mon Souvenir
               </a>
             </div>
 
             {/* PREMIUM Formula (Highlighted) */}
-            <div className="bg-gradient-to-br from-[#3A1220] to-[#5A1C30] border-2 border-[#D4B483] p-8 rounded-2xl flex flex-col justify-between relative shadow-[0_15px_45px_rgba(212,180,131,0.22)] hover:scale-[1.03] hover:shadow-[0_20px_50px_rgba(212,180,131,0.3)] transition-all duration-300 overflow-hidden">
+            <div className="bg-gradient-to-br from-[#3A1220] to-[#5A1C30] border-2 border-[#D4B483] p-8 rounded-2xl flex flex-col justify-between relative shadow-[0_15px_45px_rgba(212,180,131,0.22)] hover:scale-[1.03] hover:shadow-[0_20px_50px_rgba(212,180,131,0.3)] transition-all duration-300">
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[#D4B483]/8 to-transparent pointer-events-none"></div>
-              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#D4B483] to-[#E7C9A9] text-[#140A0D] text-[9px] font-mono tracking-widest uppercase font-extrabold py-1.5 px-5 rounded-full shadow-lg border border-[#E7C9A9]/30">
-                PLÉBISCITE
+              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#D4B483] to-[#E7C9A9] text-[#140A0D] text-[10px] font-sans tracking-wide font-extrabold py-1.5 px-5 rounded-full shadow-lg border border-[#E7C9A9]/30 flex items-center gap-1">
+                ⭐ Le plus choisi
               </div>
 
               <div>
@@ -290,14 +485,14 @@ export default function App() {
                   <span className="text-xl">💎</span>
                   <span className="text-[9px] font-mono tracking-widest uppercase bg-[#D4B483]/15 text-[#D4B483] py-1 px-2.5 rounded font-bold border border-[#D4B483]/20">PREMIUM</span>
                 </div>
-                <h3 className="font-serif text-2xl text-[#F8F4EE] tracking-wide">PREMIUM</h3>
+                <h3 className="font-serif text-2xl text-[#F8F4EE] tracking-wide">💎 PREMIUM</h3>
                 <div className="flex items-baseline gap-1 mt-2 mb-6 border-b border-white/5 pb-5">
                   <span className="text-3xl font-serif text-[#D4B483] font-normal">99$</span>
                   <span className="text-[#CFC4B5] text-xs font-mono">USD</span>
                 </div>
                 
-                <ul className="space-y-4 mb-8 text-xs text-[#CFC4B5] font-sans">
-                  <li className="flex items-center gap-2.5 text-[#E7C9A9] font-medium">
+                <ul className="space-y-4 text-xs text-[#CFC4B5] font-sans">
+                  <li className="flex items-center gap-2.5 font-medium text-[#E7C9A9]">
                     <Check className="w-4 h-4 text-[#E7C9A9] shrink-0" />
                     <span>Tout Essential</span>
                   </li>
@@ -307,7 +502,7 @@ export default function App() {
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
-                    <span>Histoire du couple</span>
+                    <span>Histoire de votre relation / souvenirs</span>
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
@@ -322,18 +517,29 @@ export default function App() {
                     <span>Vidéo intégrée</span>
                   </li>
                 </ul>
+
+                <div className="mt-6 pt-5 border-t border-white/5 space-y-2.5 text-xs text-[#CFC4B5] font-sans">
+                  <div className="flex items-center gap-2">
+                    <span>⏱️</span>
+                    <span>Livraison : 3 à 5 jours</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span>⚡</span>
+                    <span className="text-[#E7C9A9]">Livraison Express : 48h (+25$)</span>
+                  </div>
+                </div>
               </div>
 
               <a
                 href="#reservations"
                 onClick={() => handleFormulaSelect("premium")}
-                className={`w-full py-4 rounded text-center text-[10px] font-mono tracking-widest uppercase transition-all duration-300 ${
+                className={`w-full py-4 mt-6 rounded text-center text-xs font-serif font-semibold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 ${
                   formData.formula === "premium"
                     ? "bg-gradient-to-r from-[#D4B483] to-[#E7C9A9] text-[#140A0D] font-bold shadow-lg shadow-[#D4B483]/30"
                     : "bg-[#D4B483]/10 hover:bg-[#D4B483] hover:text-[#140A0D] text-[#D4B483] border border-[#D4B483]/35"
                 }`}
               >
-                Choisir Premium &bull; 99$
+                ❤️ Créer Mon Expérience
               </a>
             </div>
 
@@ -366,7 +572,7 @@ export default function App() {
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
-                    <span>Livre digital du couple</span>
+                    <span>Livre d'or digital ou hommage</span>
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
@@ -388,7 +594,7 @@ export default function App() {
                     : "bg-transparent text-[#D4B483] border border-[#D4B483]/35 hover:bg-[#D4B483]/10"
                 }`}
               >
-                Choisir Signature &bull; 199$
+                Créer Mon Projet VIP
               </a>
             </div>
 
@@ -396,14 +602,36 @@ export default function App() {
         </section>
 
         {/* 4. RESERVATION FORM */}
-        <section id="reservations" className="py-16 border-t border-white/5 grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <section id="reservations" className="py-16 border-t border-white/5 grid grid-cols-1 lg:grid-cols-12 gap-12 relative overflow-hidden rounded-3xl px-4 sm:px-6">
           
-          <div className="lg:col-span-4 space-y-6">
+          {/* Subtle luxurious collage background using both photos of Kai */}
+          <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+            <div className="absolute top-12 -left-12 w-64 h-64 sm:w-80 sm:h-80 opacity-10 rounded-full overflow-hidden blur-[4px] border border-[#D4B483]/15">
+              <img 
+                src="/input_file_0.png" 
+                alt="Kai Collage Element Left" 
+                className="w-full h-full object-cover grayscale mix-blend-overlay rotate-3 scale-110" 
+                referrerPolicy="no-referrer"
+              />
+            </div>
+            <div className="absolute bottom-12 -right-12 w-64 h-64 sm:w-80 sm:h-80 opacity-10 rounded-full overflow-hidden blur-[4px] border border-[#D4B483]/15">
+              <img 
+                src="/input_file_1.png" 
+                alt="Kai Collage Element Right" 
+                className="w-full h-full object-cover grayscale mix-blend-overlay -rotate-6 scale-110" 
+                referrerPolicy="no-referrer"
+              />
+            </div>
+            {/* Burgundy tint overlay across everything */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[#140A0D]/95 via-[#2A1018]/60 to-[#140A0D]/95 mix-blend-multiply"></div>
+          </div>
+
+          <div className="lg:col-span-4 space-y-6 relative z-10">
             <span className="text-[10px] font-mono tracking-widest text-[#D4B483] uppercase font-bold">Sur-Mesure Céleste</span>
             <h2 className="text-3xl md:text-5xl font-serif text-[#F8F4EE] tracking-tight leading-none">Créer Mon Expérience</h2>
             
             <p className="text-xs sm:text-sm leading-relaxed font-sans text-[#CFC4B5]">
-              Renseignez vos précieux éléments de couple. Nos créateurs façonneront une œuvre digitale haut de gamme à votre sillage.
+              Renseignez vos précieux souvenirs. Nos créateurs façonneront une œuvre digitale d'exception à l'image de la personne ou de la relation à célébrer.
             </p>
 
             <div className="bg-gradient-to-br from-[#2A1018] to-[#4A1525] border border-[#D4B483]/20 p-5 rounded-xl space-y-3.5 text-xs">
@@ -456,16 +684,26 @@ export default function App() {
               </div>
 
               <div className="text-[10px] text-[#CFC4B5]/90 border-t border-[#D4B483]/15 pt-3.5 space-y-1.5">
-                <p className="font-semibold text-[#D4B483] uppercase text-[9px] font-mono tracking-wider">Important Notice :</p>
+                <p className="font-semibold text-[#D4B483] uppercase text-[9px] font-mono tracking-wider">Note Importante :</p>
                 <p className="leading-relaxed">
-                  Les demandes express sont traitées en priorité et soumises à disponibilité. Veuillez nous contacter avant la commande pour confirmer la faisabilité du délai souhaité.
+                  Chaque expérience est créée spécialement pour vous. Les demandes express sont traitées en priorité selon nos disponibilités. Contactez-nous avant la commande pour finaliser le projet et valider le délai souhaité.
                 </p>
               </div>
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="lg:col-span-8 bg-gradient-to-br from-[#2A1018]/90 to-[#4A1525]/90 border border-[#D4B483]/25 p-6 sm:p-8 rounded-2xl space-y-6 shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_30px_rgba(212,180,131,0.03)] backdrop-blur-md">
+          <form onSubmit={handleSubmit} className="lg:col-span-8 relative z-10 bg-gradient-to-br from-[#2A1018]/90 to-[#4A1525]/90 border border-[#D4B483]/25 p-6 sm:p-8 rounded-2xl space-y-6 shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_30px_rgba(212,180,131,0.03)] backdrop-blur-md">
             
+            {/* Form Introduction Message */}
+            <div className="bg-[#140A0D]/40 border border-[#D4B483]/20 p-5 rounded-xl space-y-2 text-center">
+              <p className="text-xs sm:text-sm font-serif text-[#F8F4EE] italic">
+                Chaque expérience est créée pour célébrer une personne importante dans votre vie.
+              </p>
+              <p className="text-[11px] sm:text-xs text-[#CFC4B5] leading-relaxed">
+                Qu'il s'agisse d'un partenaire, d'un parent, d'un ami ou d'un proche, nous transformons vos souvenirs en une expérience unique et mémorable.
+              </p>
+            </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
                 <label className="block text-[10px] font-mono tracking-wider text-[#CFC4B5] uppercase font-semibold">
@@ -516,7 +754,7 @@ export default function App() {
 
               <div className="space-y-1.5">
                 <label className="block text-[10px] font-mono tracking-wider text-[#CFC4B5] uppercase font-semibold">
-                  Nom de votre partenaire *
+                  Nom de la personne à célébrer *
                 </label>
                 <input
                   type="text"
@@ -527,6 +765,9 @@ export default function App() {
                   onChange={handleInputChange}
                   className="w-full bg-[#140A0D]/70 text-[#F8F4EE] placeholder-[#CFC4B5]/40 text-xs px-4 py-3 border border-white/10 rounded focus:border-[#D4B483] focus:outline-none transition-all font-sans hover:border-[#D4B483]/30"
                 />
+                <span className="block text-[10px] text-[#E7C9A9]/80 font-sans leading-normal">
+                  Partenaire, mari, épouse, maman, papa, enfant, ami(e), membre de la famille ou toute personne qui compte pour vous.
+                </span>
               </div>
             </div>
 
@@ -650,7 +891,7 @@ export default function App() {
 
               {/* Trust block statement requested */}
               <p className="text-[10px] text-[#CFC4B5]/85 italic">
-                Nous acceptons uniquement un nombre limité de projets express afin de garantir la qualité de chaque expérience.
+                Chaque expérience est créée spécialement pour vous. Nous acceptons uniquement un nombre limité de projets express.
               </p>
             </div>
 
@@ -803,11 +1044,40 @@ export default function App() {
               }`}
             >
               <span>
-                {loading ? "TRAITEMENT..." : "Envoyer Ma Demande"}
+                {loading ? "TRAITEMENT..." : "❤️ Envoyer Mon Projet"}
               </span>
             </button>
           </form>
 
+        </section>
+
+        {/* 4.5 FINAL URGENCY BLOCK */}
+        <section className="py-12 relative z-10 max-w-3xl mx-auto">
+          <div className="bg-gradient-to-br from-[#33111A] to-[#521727] border border-[#D4B483]/30 rounded-2xl p-6 sm:p-10 text-center space-y-4 shadow-[0_15px_35px_rgba(20,10,13,0.5)] relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-24 h-24 bg-gradient-to-br from-[#D4B483]/5 to-transparent pointer-events-none"></div>
+            
+            <span className="text-xl sm:text-2xl block">⏳</span>
+            <h3 className="text-lg sm:text-2xl font-serif text-[#F8F4EE] tracking-tight">
+              ⏳ Votre date spéciale approche ?
+            </h3>
+            
+            <p className="text-xs sm:text-sm text-[#E7C9A9] font-mono tracking-wide uppercase">
+              Anniversaire, hommage, surprise, célébration, remerciement ou occasion spéciale...
+            </p>
+            
+            <p className="text-xs sm:text-sm text-[#CFC4B5] max-w-xl mx-auto leading-relaxed">
+              Plus vous réservez tôt, plus nous avons le temps de créer une expérience exceptionnelle.
+            </p>
+
+            <div className="pt-3">
+              <a 
+                href="#reservations"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#D4B483] to-[#E7C9A9] hover:from-[#E7C9A9] hover:to-[#F8F4EE] text-[#140A0D] font-bold text-[10px] tracking-widest uppercase rounded-lg shadow-lg hover:scale-[1.02] transition-colors"
+              >
+                ❤️ Réservez votre projet dès aujourd'hui.
+              </a>
+            </div>
+          </div>
         </section>
 
         {/* 5. CONTACT SECTION */}
@@ -824,6 +1094,18 @@ export default function App() {
           <p className="text-sm text-[#CFC4B5] font-sans leading-relaxed relative z-10">
             Pour toute demande d'accompagnement privilégié ou question de style, contactez-nous directement via nos réseaux de confiance :
           </p>
+
+          {/* Primary Contact CTA requested */}
+          <div className="pt-2 pb-4 flex justify-center relative z-10">
+            <a 
+              href="https://wa.me/18094151842" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="px-8 py-4 bg-gradient-to-r from-[#D4B483] to-[#E7C9A9] hover:from-[#E7C9A9] hover:to-[#F8F4EE] text-[#140A0D] font-bold text-[11px] tracking-widest uppercase rounded-xl shadow-[0_8px_30px_rgba(212,180,131,0.2)] transition-all duration-300 flex items-center justify-center gap-2 group hover:scale-[1.02]"
+            >
+              <span>💬 Discuter de Mon Projet</span>
+            </a>
+          </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 font-mono text-xs flex-wrap relative z-10">
             <a 
@@ -855,23 +1137,58 @@ export default function App() {
               <Mail className="w-4 h-4 text-[#D4B483]" />
               <span>Email : laikadb.me@gmail.com</span>
             </a>
-
-            <a 
-              href="https://www.tiktok.com/@kayoo1236" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="flex items-center justify-center gap-2.5 px-6 py-4 bg-gradient-to-br from-[#2A1018] to-[#4A1525] border border-[#D4B483]/15 hover:border-[#D4B483]/50 hover:from-[#3A1220] hover:to-[#5A1C30] text-[#CFC4B5] hover:text-[#E7C9A9] w-full sm:w-auto rounded-xl transition-all shadow-md"
-            >
-              <svg className="w-4 h-4 text-[#D4B483]" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.01 1.74 4.05 1.12.98 2.61 1.49 4.11 1.48v3.83c-1.4-.01-2.79-.47-3.92-1.3-.39-.29-.74-.63-1.04-1.01V15c0 1.95-.56 3.89-1.68 5.43-1.77 2.4-4.8 3.69-7.79 3.25-3.32-.48-6.1-3.13-6.6-6.47-.64-4.31 2.21-8.52 6.55-9.28 1.25-.22 2.54-.08 3.72.4V12c-.9-.46-1.95-.58-2.94-.3-1.48.42-2.61 1.76-2.82 3.28-.3 2.18 1.15 4.31 3.32 4.74 2.1.42 4.28-.81 4.88-2.89.17-.58.21-1.19.2-1.79V.02z"/>
-              </svg>
-              <span>TikTok : @kayoo1236</span>
-            </a>
           </div>
 
-          <p className="text-[#CFC4B5] text-xs font-serif italic max-w-lg mx-auto leading-relaxed pt-2 relative z-10">
-            "Suivez Kayoo Queen sur TikTok pour découvrir nos créations et expériences digitales."
-          </p>
+          {/* SOCIAL PROOF SECTION */}
+          <div className="mt-16 relative z-10 max-w-xl mx-auto p-8 rounded-3xl bg-gradient-to-br from-[#2A1018]/60 to-[#4A1525]/80 border border-[#D4B483]/20 shadow-[0_15px_45px_rgba(0,0,0,0.6)] backdrop-blur-sm group hover:border-[#D4B483]/45 transition-all duration-300">
+            
+            {/* Ambient gold glow under circular image */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-[#D4B483]/10 rounded-full blur-xl pointer-events-none"></div>
+
+            <div className="relative flex flex-col items-center gap-5">
+              {/* Luxury circular frame with double rings */}
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-tr from-[#D4B483] to-[#E7C9A9] rounded-full blur-[3px] scale-102 opacity-60"></div>
+                <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-[#D4B483] shadow-lg">
+                  <img 
+                    src="/input_file_1.png" 
+                    alt="Kayoo Queen" 
+                    className="w-full h-full object-cover object-center scale-[1.02] transition-transform duration-500 group-hover:scale-[1.06]"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+                <span className="absolute -bottom-1 -right-1 bg-gradient-to-r from-[#D4B483] to-[#E7C9A9] text-[#140A0D] p-1.5 rounded-full text-xs font-bold leading-none shadow-md border border-[#F8F4EE]/20">
+                  👑
+                </span>
+              </div>
+
+              <div className="space-y-1.5">
+                <p className="text-[9px] font-mono tracking-[0.25em] text-[#D4B483] uppercase font-bold">L'Art de Vous Célébrer</p>
+                <h4 className="font-serif text-[#F8F4EE] text-base leading-snug font-medium">
+                  Créé avec passion par Kayoo Queen 👑
+                </h4>
+                <p className="text-xs text-[#CFC4B5] max-w-sm mx-auto leading-relaxed">
+                  Chaque histoire mérite une signature unique. Suivez nos créations inspirantes sur TikTok pour découvrir l'envers du décor.
+                </p>
+              </div>
+
+              <div className="w-8 h-[1px] bg-[#D4B483]/30"></div>
+
+              {/* Verified TikTok Button */}
+              <a 
+                href="https://www.tiktok.com/@kayoo1236" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#D4B483]/10 hover:bg-[#D4B483] text-[#D4B483] hover:text-[#140A0D] border border-[#D4B483]/30 hover:border-transparent rounded-xl text-xs font-serif font-semibold tracking-wide transition-all duration-300 shadow-md scale-100 active:scale-95"
+              >
+                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.01 1.74 4.05 1.12.98 2.61 1.49 4.11 1.48v3.83c-1.4-.01-2.79-.47-3.92-1.3-.39-.29-.74-.63-1.04-1.01V15c0 1.95-.56 3.89-1.68 5.43-1.77 2.4-4.8 3.69-7.79 3.25-3.32-.48-6.1-3.13-6.6-6.47-.64-4.31 2.21-8.52 6.55-9.28 1.25-.22 2.54-.08 3.72.4V12c-.9-.46-1.95-.58-2.94-.3-1.48.42-2.61 1.76-2.82 3.28-.3 2.18 1.15 4.31 3.32 4.74 2.1.42 4.28-.81 4.88-2.89.17-.58.21-1.19.2-1.79V.02z"/>
+                </svg>
+                <span>Suivez-nous sur TikTok : @kayoo1236</span>
+              </a>
+            </div>
+
+          </div>
         </section>
 
       </main>
@@ -910,6 +1227,15 @@ export default function App() {
           </div>
         </div>
       </footer>
+      {/* Sticky Mobile CTA bottom bar bar */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-[#140A0D]/95 backdrop-blur-md border-t border-[#D4B483]/20 px-4 py-3 flex justify-center items-center shadow-[0_-10px_30px_rgba(0,0,0,0.6)]">
+        <a 
+          href="#reservations" 
+          className="w-full text-center py-3 bg-gradient-to-r from-[#D4B483] to-[#E7C9A9] text-[#140A0D] font-bold text-xs tracking-widest uppercase rounded-xl shadow-[0_4px_15px_rgba(212,180,131,0.25)] flex items-center justify-center gap-1.5"
+        >
+          <span>❤️ Réserver Maintenant</span>
+        </a>
+      </div>
     </div>
   );
 }
