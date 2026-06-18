@@ -1,6 +1,6 @@
 {
-  "name": "Digital Experiences",
-  "description": "Créez et prévisualisez des expériences web immersives et personnalisées pour célébrer vos moments précieux (Love Story, Anniversaire, Demande en mariage...). Explorez nos formules et personnalisez votre projet.",
+  "name": "Digital Love Experience",
+  "description": "Une expérience digitale unique pour célébrer votre histoire d'amour. Transformez vos souvenirs en une œuvre web haut de gamme pour un anniversaire, une demande en mariage, la Saint-Valentin ou simplement pour surprendre votre partenaire.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

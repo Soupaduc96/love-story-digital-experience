@@ -1,309 +1,915 @@
-import React, { useState } from "react";
-import { ExperienceConfig, GeneratedExperience, ExperienceType } from "./types";
-import Catalog from "./components/Catalog";
-import Configurator from "./components/Configurator";
-import Previewer from "./components/Previewer";
-import BrandPhilosophy from "./components/BrandPhilosophy";
-import Faq from "./components/Faq";
-import Testimonials from "./components/Testimonials";
-import { Sparkles, Heart, Menu, X, ChevronDown, Compass, Award, ExternalLink, Flame, ShieldCheck } from "lucide-react";
-import { motion } from "motion/react";
-
-// Pre-rendered master copy of the Love Story default demo to engage users immediately
-const DEFAULT_PREVIEW: GeneratedExperience = {
-  title: "L'Étoile et le Ruisseau",
-  subtitle: "L'éternelle romance d'Arthur & Chloé",
-  introduction: "Deux destins qui se sont frôlés au hasard des ruelles pavées de Paris avant de fusionner en un accord parfait. Voici le récit sensible de leur complicité.",
-  mainLetter: "Chère Chloé, Cher Arthur,\n\nIl existe des récits que le temps n'efface pas, mais qu'il polit comme des pierres précieuses. Tout a commencé par un après-midi pluvieux au Café de Flore. Le cliquetis des tasses de porcelaine, la buée sur les vitres, et soudain un regard échangé qui balaie tout le reste. Depuis ce jour d'automne, vous avez écrit les plus belles pages de votre vie en commun.\n\nDu lac de Côme baigné par le soleil couchant à votre cosy appartement parisien sous les toits, chaque instant de votre voyage est une promesse tenue. Cet espace numérique célèbre l'élégance de votre amour : les secrets partagés, vos éclats de rire sacrés, et cette tendre façon que vous avez de braver les petits orages du quotidien main dans la main.",
-  timeline: [
-    { date: "Octobre 2021", title: "Le Coup de Foudre sous la Pluie", text: "Rencontre fortuite au mythique Café de Flore. Une tasse de thé partagée sous l'averse parisienne scelle leur premier éclat de rire." },
-    { date: "Août 2023", title: "Promesse sur le Lac de Côme", text: "Un voyage suspendu sous le soleil de l'Italie. C'est au bord des eaux calmes qu'ils s'avouent leurs rêves d'avenir." },
-    { date: "Novembre 2025", title: "Le Nid sous les Toits", text: "Leurs deux bibliothèques s'unissent enfin dans leur appartement nid-douillet de Montmartre, ouvrant un nouveau chapitre radieux." }
-  ],
-  stylingDetails: {
-    backgroundMode: "rose-petals",
-    colorPalette: ["#090d16", "#d4af37", "#1e1b4b"],
-    audioVibe: "Mélodie délicate de piano néo-classique & violoncelle céleste"
-  },
-  quote: "S'aimer, ce n'est pas se regarder l'un l'autre, c'est regarder ensemble dans la même direction."
-};
+import React, { useState, useRef } from "react";
+import { Heart, Check, Phone, Instagram, Mail, Upload, X, ArrowRight, Sparkles } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+import { createLead } from "./leadService";
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<"client" | "crm">("client");
-  const [selectedType, setSelectedType] = useState<ExperienceType>("love-story");
-  const [config, setConfig] = useState<ExperienceConfig>({
-    selectedType: "love-story",
-    selectedFormula: "premium",
-    names: "",
-    description: "",
-    vibe: "Poétique & Intime",
-    options: {
-      narration: false,
-      video: false,
-      multilingual: false,
-      domain: false
-    }
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    whatsapp: "",
+    formula: "premium" as "essential" | "premium" | "signature",
+    partnerName: "",
+    deliveryDate: "",
+    projectDescription: ""
   });
 
-  // Load default preview on first load so users immediately see a working stunning showcase
-  const [previewData, setPreviewData] = useState<GeneratedExperience>(DEFAULT_PREVIEW);
+  const [isExpress, setIsExpress] = useState(false);
+  const [expressType, setExpressType] = useState<"essential" | "premium" | "signature">("premium");
 
-  // Sync type switches
-  const handleTypeSelect = (type: ExperienceType) => {
-    setSelectedType(type);
-    setConfig(prev => ({ ...prev, selectedType: type }));
+  const [sendChannel, setSendChannel] = useState<"whatsapp" | "email">("whatsapp");
+  const [photos, setPhotos] = useState<File[]>([]);
+  const [videos, setVideos] = useState<File[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  const fileInputPhotosRef = useRef<HTMLInputElement>(null);
+  const fileInputVideosRef = useRef<HTMLInputElement>(null);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleGeneration = (data: GeneratedExperience) => {
-    setPreviewData(data);
-    // Smoothly scroll down to the preview section automatically
-    setTimeout(() => {
-      document.getElementById("visualiseur")?.scrollIntoView({ behavior: "smooth" });
-    }, 150);
+  const handleFormulaSelect = (formula: "essential" | "premium" | "signature") => {
+    setFormData(prev => ({ ...prev, formula }));
+  };
+
+  // Manage photo uploads locally for premium preview
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const selected = Array.from(e.target.files);
+      setPhotos(prev => [...prev, ...selected]);
+    }
+  };
+
+  const removePhoto = (index: number) => {
+    setPhotos(prev => prev.filter((_, i) => i !== index));
+  };
+
+  // Manage video uploads locally for premium preview
+  const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const selected = Array.from(e.target.files);
+      setVideos(prev => [...prev, ...selected]);
+    }
+  };
+
+  const removeVideo = (index: number) => {
+    setVideos(prev => prev.filter((_, i) => i !== index));
+  };
+
+  // Compile submission text formatted beautifully
+  const getSubmissionText = () => {
+    let formulaLabel = formData.formula === "essential" ? "ESSENTIAL — 49$" :
+                         formData.formula === "premium" ? "PREMIUM — 99$" : "SIGNATURE — 199$";
+
+    if (isExpress) {
+      const expressSurcharge = expressType === "essential" ? "Essential Express (+15$)" :
+                               expressType === "premium" ? "Premium Express (+25$)" : "Signature Express (+50$)";
+      formulaLabel += ` [AVEC OPTION EXPRESS : ${expressSurcharge}]`;
+    }
+
+    const photosList = photos.length > 0 ? photos.map(p => p.name).join(", ") : "Aucune photo sélectionnée";
+    const videosList = videos.length > 0 ? videos.map(v => v.name).join(", ") : "Aucune vidéo sélectionnée";
+
+    return `✨ DEMANDE DIGITAL LOVE EXPERIENCE™ ✨\n\n` +
+           `👤 CLIENT : ${formData.fullName || "Non spécifié"}\n` +
+           `📧 EMAIL : ${formData.email || "Non spécifié"}\n` +
+           `📱 WHATSAPP : ${formData.whatsapp || "Non spécifié"}\n` +
+           `💎 FORMULE : ${formulaLabel}\n` +
+           `⚡ LIVRAISON : ${isExpress ? `EXPRESS (${expressType.toUpperCase()})` : "STANDARD"}\n\n` +
+           `📝 DETAIL DU COUPLE :\n` +
+           `• Prénom du Partenaire : ${formData.partnerName || "Non spécifié"}\n` +
+           `• Date de Remise : ${formData.deliveryDate || "Non spécifié"}\n` +
+           `• Projet : "${formData.projectDescription || "Non spécifié"}"\n\n` +
+           `📎 DOCUMENTS JOINTS :\n` +
+           `• Photos (${photos.length}) : ${photosList}\n` +
+           `• Vidéos (${videos.length}) : ${videosList}\n\n` +
+           `Merci d'avoir initié votre Digital Love Experience. Nous prendrons contact rapidement ! ❤️`;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMsg(null);
+    setSuccessMsg(null);
+
+    if (!formData.fullName || !formData.email || !formData.whatsapp || !formData.partnerName || !formData.deliveryDate) {
+      setErrorMsg("Veuillez remplir tous les champs obligatoires (*) avant d'envoyer votre projet.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      // Create lead persistence
+      await createLead({
+        name: formData.fullName,
+        email: formData.email,
+        company: "Digital Love Client",
+        selectedExperience: "Love Story Experience",
+        budgetRange: formData.formula === "essential" ? "$49" : formData.formula === "premium" ? "$99" : "$199",
+        desiredDeliveryDate: formData.deliveryDate,
+        projectDescription: `Partenaire: ${formData.partnerName}. Détails: ${formData.projectDescription}. Photos: ${photos.length}. Vidéos: ${videos.length}${isExpress ? `. Livraison Express: ${expressType} Express` : ''}`
+      });
+    } catch (err) {
+      console.warn("Storage fallback warning:", err);
+    }
+
+    setLoading(false);
+    const submissionText = getSubmissionText();
+
+    if (sendChannel === "whatsapp") {
+      const waNumber = "18094151842"; // Standard WhatsApp contact direct
+      const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(submissionText)}`;
+      window.open(waUrl, "_blank", "noopener,noreferrer");
+      setSuccessMsg("Merci. Nous vous contacterons rapidement sur WhatsApp.");
+    } else {
+      const mailtoUrl = `mailto:laikadb.me@gmail.com?subject=${encodeURIComponent("Demande Digital Love Experience")}&body=${encodeURIComponent(submissionText)}`;
+      window.location.href = mailtoUrl;
+      setSuccessMsg("Votre application d'envoi d'e-mail s'ouvre... Envoyez pour finaliser ! ❤️");
+    }
   };
 
   return (
-    <div className="min-h-screen bg-brand-dark text-slate-100 font-sans selection:bg-brand-gold/30 selection:text-[#ffffff] relative">
-      <div className="absolute top-0 left-0 right-0 h-[400px] bg-[radial-gradient(circle_at_50%_0%,rgba(161,130,74,0.15)_0%,transparent_70%)] pointer-events-none z-10" />
+    <div className="min-h-screen bg-[#140A0D] text-[#F8F4EE] font-sans selection:bg-[#D4B483]/30 relative overflow-x-hidden antialiased">
       
-      {/* Premium Elegant Header */}
-      <header className="sticky top-0 z-40 bg-brand-dark/85 backdrop-blur-md border-b border-white/15 transition-all">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          
-          {/* Logo segment */}
-          <div className="flex items-center gap-3 select-none">
-            <div className="w-9 h-9 rounded-full bg-brand-gold/10 border border-brand-gold/30 flex items-center justify-center text-brand-gold">
-              <Sparkles className="w-5 h-5 fill-brand-gold/10 text-brand-gold" />
-            </div>
-            <div>
-              <span className="font-serif text-lg tracking-wider font-semibold text-slate-100">
-                DIGITAL EXPERIENCES
-              </span>
-              <span className="block text-[8px] font-mono tracking-widest text-brand-gold uppercase -mt-0.5">
-                Beyond Design &bull; Beyond Expectations
-              </span>
-            </div>
+      {/* Golden luxury ambient backdrop glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1400px] h-[800px] bg-[radial-gradient(circle_at_50%_0%,rgba(212,180,131,0.15)_0%,rgba(74,21,37,0.3)_45%,transparent_75%)] pointer-events-none z-0"></div>
+
+      {/* 1. NAVBAR */}
+      <header className="sticky top-0 z-40 bg-[#140A0D]/95 backdrop-blur-md border-b border-[#D4B483]/15">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Heart className="w-5 h-5 fill-[#D4B483] text-[#D4B483] filter drop-shadow-[0_0_8px_rgba(212,180,131,0.3)]" />
+            <span className="font-serif text-base tracking-[0.2em] font-medium text-[#F8F4EE] block">
+              DIGITAL LOVE EXPERIENCE™
+            </span>
           </div>
 
-          {/* Navigation Links */}
-          <nav className="hidden xl:flex items-center gap-8 text-xs font-mono tracking-widest uppercase">
-            <a href="#experiences" className="text-slate-300 hover:text-brand-gold transition-colors">🌟 Expériences</a>
-            <a href="#simulateur" className="text-slate-300 hover:text-brand-gold transition-colors">✨ Simulateur</a>
-            <a href="#visualiseur" className="text-[#a1824a] hover:text-[#c4a66e] transition-colors flex items-center gap-1">📺 Prévisualisation <span className="text-[8px] px-1 py-0.5 bg-brand-gold/20 text-[#ffffff] rounded">Live</span></a>
-            <a href="#faq" className="text-slate-300 hover:text-brand-gold transition-colors">❓ FAQ</a>
-            <a href="#testimonials" className="text-slate-300 hover:text-brand-gold transition-colors">💬 Témoignages</a>
-            <a href="#philosophie" className="text-slate-300 hover:text-brand-gold transition-colors">💖 Philosophie</a>
+          <nav className="hidden md:flex items-center gap-8 text-[11px] font-mono tracking-widest uppercase">
+            <a href="#accueil" className="text-[#CFC4B5] hover:text-[#D4B483] transition-colors relative group py-2">
+              Accueil
+              <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-[#D4B483] transition-all duration-300 group-hover:w-full"></span>
+            </a>
+            <a href="#formules" className="text-[#CFC4B5] hover:text-[#D4B483] transition-colors relative group py-2">
+              Formules
+              <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-[#D4B483] transition-all duration-300 group-hover:w-full"></span>
+            </a>
+            <a href="#reservations" className="text-[#CFC4B5] hover:text-[#D4B483] transition-colors relative group py-2">
+              Réserver
+              <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-[#D4B483] transition-all duration-300 group-hover:w-full"></span>
+            </a>
           </nav>
 
-          {/* CTA header button */}
-          <div className="flex items-center gap-3">
-            <a 
-              href="#simulateur" 
-              className="px-4 py-2 bg-brand-gold/10 hover:bg-[#a1824a] hover:text-white text-brand-gold border border-brand-gold/30 rounded text-xs font-mono tracking-widest uppercase font-semibold transition-all duration-300"
-            >
-              Choisir mon Plan
-            </a>
-          </div>
+          <a
+            href="#reservations"
+            className="px-5 py-2.5 bg-[#D4B483]/10 hover:bg-[#D4B483] hover:text-[#140A0D] text-[#D4B483] border border-[#D4B483]/30 rounded text-[10px] font-mono tracking-wider uppercase font-semibold transition-all duration-300 shadow-[0_0_15px_rgba(212,180,131,0.05)] hover:shadow-[0_0_20px_rgba(212,180,131,0.2)]"
+          >
+            Réserver Mon Expérience
+          </a>
         </div>
       </header>
 
-      {/* Active Screen Rendering */}
-      <>
-          {/* Hero Section */}
-          <section className="relative min-h-[85vh] flex items-center justify-center text-center px-4 sm:px-6 lg:px-8 border-b border-white/10 overflow-hidden bg-brand-dark">
-            
-            {/* Absolute glowing shapes */}
-            <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-brand-gold/5 rounded-full filter blur-[120px] pointer-events-none"></div>
-            <div className="absolute bottom-10 left-10 w-48 h-48 bg-brand-gold/5 rounded-full filter blur-3xl pointer-events-none"></div>
-
-            <div className="max-w-4xl mx-auto space-y-8 relative z-10 pt-10">
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
-                className="inline-flex items-center gap-2 px-3.5 py-1 bg-brand-gold/10 border border-brand-gold/30 rounded-full text-[10px] tracking-widest text-[#a1824a] uppercase font-bold"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-[#a1824a] fill-brand-gold/5" /> COUTURE WEB EMBELLISSEMENT
-              </motion.div>
-
-              <div className="space-y-4">
-                <motion.h1
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.15 }}
-                  className="text-4xl sm:text-6xl lg:text-7xl font-serif tracking-tight font-normal text-white leading-tight"
-                >
-                  Des expériences qui <br/><span className="text-brand-gold italic">marquent les esprits.</span>
-                </motion.h1>
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.8, delay: 0.3 }}
-                  className="text-sm sm:text-lg text-slate-400 max-w-xl mx-auto leading-relaxed"
-                >
-                  Nous créons des expériences qui racontent des histoires, de façon poétique, intime et sophistiquée, et transforment des idées en souvenirs inoubliables.
-                </motion.p>
-              </div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.45 }}
-                className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
-              >
-                <a
-                  href="#experiences"
-                  className="w-full sm:w-auto px-8 py-4 bg-[#a1824a] hover:bg-[#856a3b] text-white font-bold text-xs tracking-widest uppercase rounded shadow-[0_4px_25px_rgba(161,130,74,0.15)] transition-all duration-300"
-                >
-                  Explorer les Concepts
-                </a>
-                <a
-                  href="#visualiseur"
-                  className="w-full sm:w-auto px-8 py-4 bg-card-dark hover:bg-card-dark-alt text-slate-300 border border-white/10 text-xs tracking-widest font-mono uppercase rounded transition-all duration-300"
-                >
-                  Voir la Maquette en Direct
-                </a>
-              </motion.div>
-
-              {/* scroll indicator */}
-              <motion.div
-                animate={{ y: [0, 8, 0] }}
-                transition={{ repeat: Infinity, duration: 2 }}
-                className="pt-16 flex flex-col items-center justify-center"
-              >
-                <a href="#experiences" className="text-slate-500 hover:text-brand-gold transition-colors flex flex-col items-center gap-1 text-[10px] font-mono tracking-widest uppercase">
-                  Faire défiler
-                  <ChevronDown className="w-4 h-4 text-slate-500" />
-                </a>
-              </motion.div>
-            </div>
-          </section>
-
-          {/* Catalog lists */}
-          <Catalog activeId={selectedType} onSelectExperience={handleTypeSelect} />
-
-          {/* Simulator devis Configurator */}
-          <Configurator 
-            selectedExperienceType={selectedType} 
-            onGenerationComplete={handleGeneration}
-            config={config}
-            setConfig={setConfig}
-          />
-
-          {/* Live Interactive Rendering Previewer (Loaded with default data so users immediately play!) */}
-          <div id="visualiseur-container" className="border-b border-white/10 relative">
-            <div className="bg-brand-dark/95 border-b border-white/10 py-4 px-6 sticky top-20 z-30 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-2.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-brand-gold animate-pulse shadow-[0_0_10px_#a1824a]"></span>
-                <p className="text-xs font-mono text-slate-300 uppercase tracking-wide">
-                  Miroir de Maquette Interactive <span className="text-slate-500">|</span> <span className="text-brand-gold">{selectedType.toUpperCase()} ({config.selectedFormula.toUpperCase()})</span>
-                </p>
-              </div>
-              <div className="text-xs font-mono text-slate-500 text-center sm:text-right">
-                Modifiez les paramètres du simulateur ci-dessus pour adapter l'histoire et régénérer en direct.
-              </div>
-            </div>
-            <Previewer experience={previewData} />
+      {/* Main Content */}
+      <main className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* 2. HERO SECTION */}
+        <section id="accueil" className="text-center py-20 sm:py-28 md:py-32 max-w-4xl mx-auto space-y-8">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#D4B483]/10 border border-[#D4B483]/25 rounded-full text-[10px] tracking-[0.15em] text-[#D4B483] uppercase font-semibold">
+            <Sparkles className="w-3.5 h-3.5 text-[#E7C9A9]" /> L'EXCELLENCE DE L'AMOUR DIGITAL
           </div>
 
-          {/* Brand Philosophy */}
-          <BrandPhilosophy />
+          <div className="space-y-4">
+            <h1 className="text-4xl sm:text-6xl md:text-7xl font-serif tracking-tight text-[#F8F4EE] leading-tight font-normal">
+              DIGITAL LOVE<br/><span className="text-[#D4B483] italic">EXPERIENCE™</span>
+            </h1>
+            <p className="text-base sm:text-lg text-[#F8F4EE] font-serif italic max-w-3xl mx-auto opacity-90">
+              Des expériences digitales personnalisées pour célébrer votre histoire d'amour.
+            </p>
+            <div className="w-12 h-[1px] bg-[#D4B483]/30 mx-auto my-6"></div>
+            <p className="text-sm sm:text-base text-[#CFC4B5] max-w-2xl mx-auto leading-relaxed">
+              Anniversaire, surprise romantique, demande en mariage ou souvenir unique.
+              Nous transformons vos plus beaux moments en une expérience digitale élégante et inoubliable.
+            </p>
+          </div>
 
-          {/* Testimonials */}
-          <Testimonials />
+          <div className="pt-6 flex justify-center">
+            <a
+              href="#reservations"
+              className="px-8 py-4 bg-gradient-to-r from-[#D4B483] to-[#E7C9A9] hover:from-[#E7C9A9] hover:to-[#F8F4EE] text-[#140A0D] font-bold text-[11px] tracking-widest uppercase rounded shadow-[0_8px_30px_rgba(212,180,131,0.25)] transition-all duration-300 flex items-center gap-2 group hover:scale-[1.02]"
+            >
+              Réserver Mon Expérience
+              <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+            </a>
+          </div>
 
-          {/* FAQ */}
-          <Faq />
+          {/* Luxury scroll indicator */}
+          <div className="pt-12 sm:pt-16 flex flex-col items-center justify-center gap-1.5 text-[#CFC4B5]/60 hover:text-[#D4B483] transition-colors">
+            <a href="#formules" className="text-[10px] font-mono tracking-widest uppercase select-none">
+              DÉCOUVRIR NOS FORMULES
+            </a>
+            <div className="w-[1px] h-8 bg-gradient-to-b from-[#D4B483] to-transparent animate-pulse md:h-12"></div>
+          </div>
+        </section>
 
-          {/* Detailed Premium Features pricing details */}
-          <section className="py-20 px-4 md:px-8 bg-brand-dark border-b border-white/10">
-            <div className="max-w-5xl mx-auto space-y-12">
-              <div className="text-center space-y-2">
-                <span className="text-xs font-mono uppercase tracking-widest text-[#a1824a]">Grille de Formules</span>
-                <h3 className="text-2xl md:text-4xl font-serif text-white">Comparez Nos Prestations</h3>
+        {/* 3. PRICING SECTION */}
+        <section id="formules" className="py-16 space-y-12 border-t border-white/5 relative">
+          {/* Subtle luxurious background romantic glow */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] bg-[radial-gradient(circle,rgba(212,180,131,0.06)_0%,transparent_70%)] pointer-events-none z-0"></div>
+
+          <div className="text-center space-y-2 relative z-10">
+            <span className="text-[10px] font-mono tracking-widest text-[#D4B483] uppercase font-bold">L'Art de notre Maison</span>
+            <h2 className="text-3xl md:text-5xl font-serif text-[#F8F4EE] font-normal tracking-tight">Nos Formules</h2>
+            <div className="w-10 h-[1px] bg-[#D4B483]/50 mx-auto mt-4"></div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
+            
+            {/* ESSENTIAL Formula */}
+            <div className="bg-gradient-to-br from-[#2A1018] to-[#4A1525] border border-[#D4B483]/20 p-8 rounded-2xl flex flex-col justify-between hover:border-[#D4B483]/45 hover:shadow-[0_15px_35px_rgba(212,180,131,0.08)] transition-all duration-300 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-[#D4B483]/5 to-transparent pointer-events-none"></div>
+              <div>
+                <div className="mb-6 flex justify-between items-center text-[#CFC4B5]">
+                  <span className="text-xl">❤️</span>
+                  <span className="text-[9px] font-mono tracking-widest uppercase bg-white/5 py-1 px-2.5 rounded text-[#F8F4EE] border border-white/5">ESSENTIAL</span>
+                </div>
+                <h3 className="font-serif text-2xl text-[#F8F4EE] tracking-wide">ESSENTIAL</h3>
+                <div className="flex items-baseline gap-1 mt-2 mb-6 border-b border-white/5 pb-5">
+                  <span className="text-3xl font-serif text-[#D4B483] font-normal">49$</span>
+                  <span className="text-[#CFC4B5] text-xs font-mono">USD</span>
+                </div>
+                
+                <ul className="space-y-4 mb-8 text-xs text-[#CFC4B5] font-sans">
+                  <li className="flex items-center gap-2.5">
+                    <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
+                    <span>Compte à rebours personnalisé</span>
+                  </li>
+                  <li className="flex items-center gap-2.5">
+                    <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
+                    <span>Galerie photos</span>
+                  </li>
+                  <li className="flex items-center gap-2.5">
+                    <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
+                    <span>Message romantique</span>
+                  </li>
+                  <li className="flex items-center gap-2.5">
+                    <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
+                    <span>Design premium</span>
+                  </li>
+                  <li className="flex items-center gap-2.5">
+                    <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
+                    <span>QR Code</span>
+                  </li>
+                </ul>
               </div>
 
-              <div className="overflow-x-auto rounded-xl border border-white/10">
-                <table className="w-full text-left border-collapse text-xs md:text-sm bg-card-dark">
-                  <thead>
-                    <tr className="bg-brand-dark border-b border-white/15 text-slate-400 font-mono uppercase tracking-wider text-[10px]">
-                      <th className="p-4 md:p-6">Inclusions</th>
-                      <th className="p-4 md:p-6 text-slate-300">🥉 ESSENTIAL</th>
-                      <th className="p-4 md:p-6 text-brand-gold">🥈 PREMIUM</th>
-                      <th className="p-4 md:p-6 text-[#c4a66e]">🥇 LUXURY SIGNATURE</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-white/5 text-slate-300 bg-[#161616]/30">
-                    <tr>
-                      <td className="p-4 md:p-6 font-semibold text-slate-200">Tarif de Référence</td>
-                      <td className="p-4 md:p-6 font-mono font-medium text-slate-100">$99 <span className="text-[10px] opacity-40">USD</span></td>
-                      <td className="p-4 md:p-6 font-mono font-medium text-brand-gold">$249 <span className="text-[10px] opacity-40">USD</span></td>
-                      <td className="p-4 md:p-6 font-mono font-medium text-amber-400">$499 <span className="text-[10px] opacity-40">USD</span></td>
-                    </tr>
-                    <tr>
-                      <td className="p-4 md:p-6 font-semibold text-slate-200">Limite de Photos</td>
-                      <td className="p-4 md:p-6">Jusqu'à 10 photos</td>
-                      <td className="p-4 md:p-6">Jusqu'à 30 photos</td>
-                      <td className="p-4 md:p-6 font-semibold text-brand-gold">Photos illimitées</td>
-                    </tr>
-                    <tr>
-                      <td className="p-4 md:p-6 font-semibold text-slate-200">Génération par IA (Storytelling)</td>
-                      <td className="p-4 md:p-6 text-slate-500">Non inclus</td>
-                      <td className="p-4 md:p-6">✅ Storytelling écrit</td>
-                      <td className="p-4 md:p-6">✅ Storytelling Premium Supérieur</td>
-                    </tr>
-                    <tr>
-                      <td className="p-4 md:p-6 font-semibold text-slate-200">Chronologie (Timeline interactive)</td>
-                      <td className="p-4 md:p-6 text-slate-500">Non inclus</td>
-                      <td className="p-4 md:p-6">✅ Oui (3 événements)</td>
-                      <td className="p-4 md:p-6">✅ Événements d'exception complexes</td>
-                    </tr>
-                    <tr>
-                      <td className="p-4 md:p-6 font-semibold text-slate-200">VFX & Éléments flottants</td>
-                      <td className="p-4 md:p-6 text-slate-500">Non inclus</td>
-                      <td className="p-4 md:p-6 text-slate-400">Basique</td>
-                      <td className="p-4 md:p-6 font-semibold text-brand-gold">✅ Pétales de roses, Sparkles & Bougies</td>
-                    </tr>
-                    <tr>
-                      <td className="p-4 md:p-6 font-semibold text-slate-200">Hébergement & Liaison</td>
-                      <td className="p-4 md:p-6">Lien partageable standard</td>
-                      <td className="p-4 md:p-6">Lien partageable standard</td>
-                      <td className="p-4 md:p-6">✅ Hébergement Premium inclus à vie</td>
-                    </tr>
-                    <tr>
-                      <td className="p-4 md:p-6 font-semibold text-slate-200">Délai indicatif</td>
-                      <td className="p-4 md:p-6">1 à 3 Jours</td>
-                      <td className="p-4 md:p-6">3 à 5 Jours</td>
-                      <td className="p-4 md:p-6">5 à 10 Jours</td>
-                    </tr>
-                  </tbody>
-                </table>
+              <a
+                href="#reservations"
+                onClick={() => handleFormulaSelect("essential")}
+                className={`w-full py-3.5 rounded text-center text-[10px] font-mono tracking-widest uppercase transition-all duration-300 ${
+                  formData.formula === "essential"
+                    ? "bg-gradient-to-r from-[#D4B483] to-[#E7C9A9] text-[#140A0D] font-bold shadow-lg shadow-[#D4B483]/20"
+                    : "bg-transparent text-[#D4B483] border border-[#D4B483]/35 hover:bg-[#D4B483]/10"
+                }`}
+              >
+                Choisir Essential &bull; 49$
+              </a>
+            </div>
+
+            {/* PREMIUM Formula (Highlighted) */}
+            <div className="bg-gradient-to-br from-[#3A1220] to-[#5A1C30] border-2 border-[#D4B483] p-8 rounded-2xl flex flex-col justify-between relative shadow-[0_15px_45px_rgba(212,180,131,0.22)] hover:scale-[1.03] hover:shadow-[0_20px_50px_rgba(212,180,131,0.3)] transition-all duration-300 overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[#D4B483]/8 to-transparent pointer-events-none"></div>
+              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#D4B483] to-[#E7C9A9] text-[#140A0D] text-[9px] font-mono tracking-widest uppercase font-extrabold py-1.5 px-5 rounded-full shadow-lg border border-[#E7C9A9]/30">
+                PLÉBISCITE
+              </div>
+
+              <div>
+                <div className="mb-6 flex justify-between items-center pt-2">
+                  <span className="text-xl">💎</span>
+                  <span className="text-[9px] font-mono tracking-widest uppercase bg-[#D4B483]/15 text-[#D4B483] py-1 px-2.5 rounded font-bold border border-[#D4B483]/20">PREMIUM</span>
+                </div>
+                <h3 className="font-serif text-2xl text-[#F8F4EE] tracking-wide">PREMIUM</h3>
+                <div className="flex items-baseline gap-1 mt-2 mb-6 border-b border-white/5 pb-5">
+                  <span className="text-3xl font-serif text-[#D4B483] font-normal">99$</span>
+                  <span className="text-[#CFC4B5] text-xs font-mono">USD</span>
+                </div>
+                
+                <ul className="space-y-4 mb-8 text-xs text-[#CFC4B5] font-sans">
+                  <li className="flex items-center gap-2.5 text-[#E7C9A9] font-medium">
+                    <Check className="w-4 h-4 text-[#E7C9A9] shrink-0" />
+                    <span>Tout Essential</span>
+                  </li>
+                  <li className="flex items-center gap-2.5">
+                    <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
+                    <span>Musique personnalisée</span>
+                  </li>
+                  <li className="flex items-center gap-2.5">
+                    <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
+                    <span>Histoire du couple</span>
+                  </li>
+                  <li className="flex items-center gap-2.5">
+                    <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
+                    <span>Animations premium</span>
+                  </li>
+                  <li className="flex items-center gap-2.5">
+                    <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
+                    <span>Jusqu'à 30 photos</span>
+                  </li>
+                  <li className="flex items-center gap-2.5 text-[#E7C9A9]">
+                    <Check className="w-4 h-4 text-[#E7C9A9] shrink-0" />
+                    <span>Vidéo intégrée</span>
+                  </li>
+                </ul>
+              </div>
+
+              <a
+                href="#reservations"
+                onClick={() => handleFormulaSelect("premium")}
+                className={`w-full py-4 rounded text-center text-[10px] font-mono tracking-widest uppercase transition-all duration-300 ${
+                  formData.formula === "premium"
+                    ? "bg-gradient-to-r from-[#D4B483] to-[#E7C9A9] text-[#140A0D] font-bold shadow-lg shadow-[#D4B483]/30"
+                    : "bg-[#D4B483]/10 hover:bg-[#D4B483] hover:text-[#140A0D] text-[#D4B483] border border-[#D4B483]/35"
+                }`}
+              >
+                Choisir Premium &bull; 99$
+              </a>
+            </div>
+
+            {/* SIGNATURE Formula */}
+            <div className="bg-gradient-to-br from-[#2A1018] to-[#4A1525] border border-[#D4B483]/20 p-8 rounded-2xl flex flex-col justify-between hover:border-[#D4B483]/45 hover:shadow-[0_15px_35px_rgba(212,180,131,0.08)] transition-all duration-300 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-[#D4B483]/5 to-transparent pointer-events-none"></div>
+              <div>
+                <div className="mb-6 flex justify-between items-center text-[#CFC4B5]">
+                  <span className="text-xl">👑</span>
+                  <span className="text-[9px] font-mono tracking-widest uppercase bg-white/5 py-1 px-2.5 rounded text-[#F8F4EE] border border-white/5">SIGNATURE</span>
+                </div>
+                <h3 className="font-serif text-2xl text-[#F8F4EE] tracking-wide">SIGNATURE</h3>
+                <div className="flex items-baseline gap-1 mt-2 mb-6 border-b border-white/5 pb-5">
+                  <span className="text-3xl font-serif text-[#D4B483] font-normal">199$</span>
+                  <span className="text-[#CFC4B5] text-xs font-mono">USD</span>
+                </div>
+                
+                <ul className="space-y-4 mb-8 text-xs text-[#CFC4B5] font-sans">
+                  <li className="flex items-center gap-2.5 text-[#D4B483] font-medium">
+                    <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
+                    <span>Tout Premium</span>
+                  </li>
+                  <li className="flex items-center gap-2.5">
+                    <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
+                    <span>Domaine personnalisé</span>
+                  </li>
+                  <li className="flex items-center gap-2.5">
+                    <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
+                    <span>Timeline interactive</span>
+                  </li>
+                  <li className="flex items-center gap-2.5">
+                    <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
+                    <span>Livre digital du couple</span>
+                  </li>
+                  <li className="flex items-center gap-2.5">
+                    <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
+                    <span>Expérience ultra personnalisée</span>
+                  </li>
+                  <li className="flex items-center gap-2.5">
+                    <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
+                    <span>Support prioritaire</span>
+                  </li>
+                </ul>
+              </div>
+
+              <a
+                href="#reservations"
+                onClick={() => handleFormulaSelect("signature")}
+                className={`w-full py-3.5 rounded text-center text-[10px] font-mono tracking-widest uppercase transition-all duration-300 ${
+                  formData.formula === "signature"
+                    ? "bg-gradient-to-r from-[#D4B483] to-[#E7C9A9] text-[#140A0D] font-bold shadow-lg shadow-[#D4B483]/20"
+                    : "bg-transparent text-[#D4B483] border border-[#D4B483]/35 hover:bg-[#D4B483]/10"
+                }`}
+              >
+                Choisir Signature &bull; 199$
+              </a>
+            </div>
+
+          </div>
+        </section>
+
+        {/* 4. RESERVATION FORM */}
+        <section id="reservations" className="py-16 border-t border-white/5 grid grid-cols-1 lg:grid-cols-12 gap-12">
+          
+          <div className="lg:col-span-4 space-y-6">
+            <span className="text-[10px] font-mono tracking-widest text-[#D4B483] uppercase font-bold">Sur-Mesure Céleste</span>
+            <h2 className="text-3xl md:text-5xl font-serif text-[#F8F4EE] tracking-tight leading-none">Créer Mon Expérience</h2>
+            
+            <p className="text-xs sm:text-sm leading-relaxed font-sans text-[#CFC4B5]">
+              Renseignez vos précieux éléments de couple. Nos créateurs façonneront une œuvre digitale haut de gamme à votre sillage.
+            </p>
+
+            <div className="bg-gradient-to-br from-[#2A1018] to-[#4A1525] border border-[#D4B483]/20 p-5 rounded-xl space-y-3.5 text-xs">
+              <span className="block text-[9px] font-mono tracking-widest text-[#D4B483] uppercase font-bold">Précisons de Livraison :</span>
+              <ul className="space-y-3 text-[#CFC4B5]">
+                <li className="flex items-center gap-2.5">
+                  <Check className="w-3.5 h-3.5 text-[#D4B483]" />
+                  <span>Acompte de 50% au lancement, solde de 50% à la livraison</span>
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <Check className="w-3.5 h-3.5 text-[#D4B483]" />
+                  <span>Essential : Livré en 24-48h</span>
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <Check className="w-3.5 h-3.5 text-[#D4B483]" />
+                  <span>Premium : En 3 à 5 jours d'exception</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Livraison Express Box */}
+            <div className="bg-gradient-to-br from-[#33111A] to-[#521727] border-2 border-[#D4B483]/40 p-5 rounded-xl space-y-4 text-xs shadow-[0_15px_30px_rgba(20,10,13,0.5)] relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-[#D4B483]/5 to-transparent pointer-events-none"></div>
+              <span className="flex items-center gap-1.5 text-[9px] font-mono tracking-widest text-[#D4B483] uppercase font-bold">
+                ⚡ Livraison Express Disponible
+              </span>
+              <p className="text-[#CFC4B5]">
+                Besoin de votre expérience plus rapidement ? Nous proposons une option de livraison prioritaire selon nos disponibilités.
+              </p>
+              
+              <div className="space-y-3 pt-2.5 border-t border-[#D4B483]/15">
+                <span className="block text-[9px] font-mono tracking-widest text-[#D4B483] uppercase font-bold">
+                  Tarifs Express :
+                </span>
+                
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center bg-[#140A0D]/60 p-2 rounded border border-[#D4B483]/15">
+                    <span className="text-[#CFC4B5]">❤️ Essential (sous 24h)</span>
+                    <span className="font-bold text-[#D4B483] font-mono">+15$</span>
+                  </div>
+                  <div className="flex justify-between items-center bg-[#140A0D]/60 p-2 rounded border border-[#D4B483]/15">
+                    <span className="text-[#CFC4B5]">💎 Premium (sous 48h)</span>
+                    <span className="font-bold text-[#D4B483] font-mono">+25$</span>
+                  </div>
+                  <div className="flex justify-between items-center bg-[#140A0D]/60 p-2 rounded border border-[#D4B483]/15">
+                    <span className="text-[#CFC4B5]">👑 Signature (prioritaire)</span>
+                    <span className="font-bold text-[#D4B483] font-mono">+50$</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="text-[10px] text-[#CFC4B5]/90 border-t border-[#D4B483]/15 pt-3.5 space-y-1.5">
+                <p className="font-semibold text-[#D4B483] uppercase text-[9px] font-mono tracking-wider">Important Notice :</p>
+                <p className="leading-relaxed">
+                  Les demandes express sont traitées en priorité et soumises à disponibilité. Veuillez nous contacter avant la commande pour confirmer la faisabilité du délai souhaité.
+                </p>
               </div>
             </div>
-          </section>
+          </div>
 
-          {/* Footer Segment */}
-          <footer className="bg-brand-dark py-16 px-4 md:px-8 border-t border-white/10">
-            <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
-              <div className="text-center md:text-left space-y-2">
-                <h4 className="font-serif text-lg text-white font-medium select-none">DIGITAL EXPERIENCES</h4>
-                <p className="text-xs text-slate-500 max-w-sm font-sans">
-                  Plateforme de conception de sanctuaires d'émotion et d'expériences numériques couture de premier rang.
-                </p>
+          <form onSubmit={handleSubmit} className="lg:col-span-8 bg-gradient-to-br from-[#2A1018]/90 to-[#4A1525]/90 border border-[#D4B483]/25 p-6 sm:p-8 rounded-2xl space-y-6 shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_30px_rgba(212,180,131,0.03)] backdrop-blur-md">
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <label className="block text-[10px] font-mono tracking-wider text-[#CFC4B5] uppercase font-semibold">
+                  Nom Complet *
+                </label>
+                <input
+                  type="text"
+                  name="fullName"
+                  required
+                  placeholder="ex: Marie de Castries"
+                  value={formData.fullName}
+                  onChange={handleInputChange}
+                  className="w-full bg-[#140A0D]/70 text-[#F8F4EE] placeholder-[#CFC4B5]/40 text-xs px-4 py-3 border border-white/10 rounded focus:border-[#D4B483] focus:outline-none transition-all font-sans hover:border-[#D4B483]/30"
+                />
               </div>
 
-              <div className="text-center md:text-right space-y-2">
-                <p className="text-xs font-mono text-brand-gold uppercase tracking-widest font-semibold header-letter-spacing">
-                  BEYOND WEBSITES &bull; BEYOND DESIGN &bull; BEYOND EXPECTATIONS
-                </p>
-                <p className="text-[10px] text-slate-500 font-sans">
-                  © {new Date().getFullYear()} Digital Experiences. Conçu avec amour pour des souvenirs éternels.
-                </p>
+              <div className="space-y-1.5">
+                <label className="block text-[10px] font-mono tracking-wider text-[#CFC4B5] uppercase font-semibold">
+                  Adresse Email *
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  required
+                  placeholder="ex: marie@exemple.com"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="w-full bg-[#140A0D]/70 text-[#F8F4EE] placeholder-[#CFC4B5]/40 text-xs px-4 py-3 border border-white/10 rounded focus:border-[#D4B483] focus:outline-none transition-all font-sans hover:border-[#D4B483]/30"
+                />
               </div>
             </div>
-          </footer>
-        </>
 
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <label className="block text-[10px] font-mono tracking-wider text-[#CFC4B5] uppercase font-semibold">
+                  Numéro WhatsApp *
+                </label>
+                <input
+                  type="text"
+                  name="whatsapp"
+                  required
+                  placeholder="ex: +33 6 12 34 56 78"
+                  value={formData.whatsapp}
+                  onChange={handleInputChange}
+                  className="w-full bg-[#140A0D]/70 text-[#F8F4EE] placeholder-[#CFC4B5]/40 text-xs px-4 py-3 border border-white/10 rounded focus:border-[#D4B483] focus:outline-none transition-all font-sans hover:border-[#D4B483]/30"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="block text-[10px] font-mono tracking-wider text-[#CFC4B5] uppercase font-semibold">
+                  Nom de votre partenaire *
+                </label>
+                <input
+                  type="text"
+                  name="partnerName"
+                  required
+                  placeholder="ex: Chloé"
+                  value={formData.partnerName}
+                  onChange={handleInputChange}
+                  className="w-full bg-[#140A0D]/70 text-[#F8F4EE] placeholder-[#CFC4B5]/40 text-xs px-4 py-3 border border-white/10 rounded focus:border-[#D4B483] focus:outline-none transition-all font-sans hover:border-[#D4B483]/30"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <label className="block text-[10px] font-mono tracking-wider text-[#CFC4B5] uppercase font-semibold">
+                  Date de remise *
+                </label>
+                <input
+                  type="date"
+                  name="deliveryDate"
+                  required
+                  value={formData.deliveryDate}
+                  onChange={handleInputChange}
+                  className="w-full bg-[#140A0D]/70 text-[#F8F4EE] text-xs px-4 py-3 border border-white/10 rounded focus:border-[#D4B483] focus:outline-none transition-all font-mono cursor-pointer hover:border-[#D4B483]/30"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="block text-[10px] font-mono tracking-wider text-[#CFC4B5] uppercase font-semibold">
+                  Formule choisie *
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  {(["essential", "premium", "signature"] as const).map(f => (
+                    <button
+                      key={f}
+                      type="button"
+                      onClick={() => handleFormulaSelect(f)}
+                      className={`py-2 px-1 text-[9px] font-mono uppercase rounded border transition-all text-center flex flex-col items-center justify-center cursor-pointer ${
+                        formData.formula === f
+                          ? "bg-gradient-to-r from-[#D4B483]/20 to-[#E7C9A9]/20 border-[#D4B483] text-[#F8F4EE] font-medium shadow-[0_0_15px_rgba(212,180,131,0.1)]"
+                          : "bg-[#140A0D]/75 border-white/10 text-[#CFC4B5] hover:border-[#D4B483]/50"
+                      }`}
+                    >
+                      <span className="text-[11px] mb-0.5">{f === "essential" ? "❤️" : f === "premium" ? "💎" : "👑"}</span>
+                      {f}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="block text-[10px] font-mono tracking-wider text-[#CFC4B5] uppercase font-semibold">
+                Décrivez votre projet *
+              </label>
+              <textarea
+                name="projectDescription"
+                required
+                rows={4}
+                value={formData.projectDescription}
+                onChange={handleInputChange}
+                placeholder="Parlez-nous de votre histoire, de l'occasion et de ce que vous souhaitez créer."
+                className="w-full bg-[#140A0D]/70 text-[#F8F4EE] placeholder-[#CFC4B5]/40 text-xs px-4 py-3 border border-white/10 rounded focus:border-[#D4B483] focus:outline-none transition-all font-sans resize-none hover:border-[#D4B483]/30"
+              />
+            </div>
+
+            {/* Express Option Choice Checker */}
+            <div className="p-4 bg-gradient-to-br from-[#33111A]/55 to-[#521727]/55 border border-[#D4B483]/30 rounded-xl space-y-4 shadow-[0_5px_15px_rgba(20,10,13,0.3)]">
+              <label className="flex items-center gap-3 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={isExpress}
+                  onChange={(e) => {
+                    setIsExpress(e.target.checked);
+                    if (e.target.checked) {
+                      setExpressType(formData.formula);
+                    }
+                  }}
+                  className="rounded border-[#D4B483]/30 bg-[#140A0D] text-[#D4B483] focus:ring-[#D4B483]/50 w-4 h-4 cursor-pointer"
+                />
+                <span className="text-xs sm:text-sm font-serif text-[#F8F4EE] flex items-center gap-1.5 font-medium">
+                  ⚡ Je souhaite une livraison express
+                </span>
+              </label>
+
+              <AnimatePresence>
+                {isExpress && (
+                  <motion.div 
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="space-y-3 overflow-hidden"
+                  >
+                    <span className="block text-[10px] font-mono tracking-wider text-[#CFC4B5] uppercase font-semibold">
+                      Type de livraison express souhaitée :
+                    </span>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      {[
+                        { id: "essential", label: "Essential Express", price: "+15$" },
+                        { id: "premium", label: "Premium Express", price: "+25$" },
+                        { id: "signature", label: "Signature Express", price: "+50$" },
+                      ].map((opt) => (
+                        <label 
+                          key={opt.id}
+                          className={`flex items-center justify-between p-3 rounded-lg border cursor-pointer select-none transition-all ${
+                            expressType === opt.id 
+                              ? "bg-gradient-to-r from-[#D4B483]/15 to-[#E7C9A9]/15 border-[#D4B483] text-[#F8F4EE] shadow-[0_0_12px_rgba(212,180,131,0.08)]" 
+                              : "bg-[#140A0D]/75 border-[#D4B483]/10 text-[#CFC4B5] hover:border-[#D4B483]/40"
+                          }`}
+                        >
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="radio"
+                              name="expressType"
+                              value={opt.id}
+                              checked={expressType === opt.id}
+                              onChange={() => setExpressType(opt.id as any)}
+                              className="sr-only"
+                            />
+                            <span className="text-[10px] font-mono tracking-wider uppercase">{opt.label}</span>
+                          </div>
+                          <span className="text-[10px] font-mono font-bold text-[#D4B483]">{opt.price}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Trust block statement requested */}
+              <p className="text-[10px] text-[#CFC4B5]/85 italic">
+                Nous acceptons uniquement un nombre limité de projets express afin de garantir la qualité de chaque expérience.
+              </p>
+            </div>
+
+            {/* Premium upload files zones */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+              {/* Photo Upload Card */}
+              <div className="p-4 bg-gradient-to-br from-[#2A1018] to-[#4A1525] border border-[#D4B483]/20 rounded-lg space-y-3 shadow-[0_5px_15px_rgba(20,10,13,0.15)]">
+                <div className="flex items-center justify-between">
+                  <label className="block text-[10px] font-mono tracking-wider text-[#CFC4B5] uppercase font-semibold">
+                    Upload Photos
+                  </label>
+                  <span className="text-[9px] font-mono text-[#D4B483]">({photos.length} sélectionnée{photos.length !== 1 && 's'})</span>
+                </div>
+                
+                <input
+                  type="file"
+                  ref={fileInputPhotosRef}
+                  multiple
+                  accept="image/*"
+                  onChange={handlePhotoChange}
+                  className="hidden"
+                />
+
+                <div 
+                  onClick={() => fileInputPhotosRef.current?.click()}
+                  className="border border-dashed border-[#D4B483]/30 hover:border-[#D4B483] rounded-md p-4 text-center cursor-pointer hover:bg-[#D4B483]/5 transition-all flex flex-col items-center justify-center gap-1"
+                >
+                  <Upload className="w-4 h-4 text-[#CFC4B5]" />
+                  <span className="text-[10px] text-[#CFC4B5] font-mono">Ajouter des photos</span>
+                </div>
+
+                {photos.length > 0 && (
+                  <div className="max-h-24 overflow-y-auto space-y-1 pr-1">
+                    {photos.map((p, idx) => (
+                      <div key={idx} className="flex items-center justify-between bg-[#140A0D]/60 border border-white/5 text-[9px] font-mono px-2 py-1 rounded">
+                        <span className="truncate max-w-[140px] text-[#F8F4EE]">{p.name}</span>
+                        <button type="button" onClick={() => removePhoto(idx)} className="text-rose-400 hover:text-rose-300">
+                          <X className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Video Upload Card */}
+              <div className="p-4 bg-gradient-to-br from-[#2A1018] to-[#4A1525] border border-[#D4B483]/20 rounded-lg space-y-3 shadow-[0_5px_15px_rgba(20,10,13,0.15)]">
+                <div className="flex items-center justify-between">
+                  <label className="block text-[10px] font-mono tracking-wider text-[#CFC4B5] uppercase font-semibold">
+                    Upload Vidéos (Optional)
+                  </label>
+                  <span className="text-[9px] font-mono text-[#D4B483]">({videos.length} sélectionnée{videos.length !== 1 && 's'})</span>
+                </div>
+
+                <input
+                  type="file"
+                  ref={fileInputVideosRef}
+                  multiple
+                  accept="video/*"
+                  onChange={handleVideoChange}
+                  className="hidden"
+                />
+
+                <div 
+                  onClick={() => fileInputVideosRef.current?.click()}
+                  className="border border-dashed border-[#D4B483]/30 hover:border-[#D4B483] rounded-md p-4 text-center cursor-pointer hover:bg-[#D4B483]/5 transition-all flex flex-col items-center justify-center gap-1"
+                >
+                  <Upload className="w-4 h-4 text-[#CFC4B5]" />
+                  <span className="text-[10px] text-[#CFC4B5] font-mono">Ajouter des vidéos</span>
+                </div>
+
+                {videos.length > 0 && (
+                  <div className="max-h-24 overflow-y-auto space-y-1 pr-1">
+                    {videos.map((v, idx) => (
+                      <div key={idx} className="flex items-center justify-between bg-[#140A0D]/60 border border-white/5 text-[9px] font-mono px-2 py-1 rounded">
+                        <span className="truncate max-w-[140px] text-[#F8F4EE]">{v.name}</span>
+                        <button type="button" onClick={() => removeVideo(idx)} className="text-rose-400 hover:text-rose-300">
+                          <X className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* SENDING CANAL CHOOSER (Required options for WhatsApp or E-mail dispatch) */}
+            <div className="p-4 bg-gradient-to-br from-[#33111A]/70 to-[#521727]/70 border border-[#D4B483]/20 rounded-lg space-y-3 shadow-[0_8px_20px_rgba(20,10,13,0.3)]">
+              <span className="block text-[9px] font-mono tracking-widest text-[#D4B483] uppercase font-bold text-center">
+                Choisissez votre canal de dispatch :
+              </span>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <label className={`flex items-center justify-center gap-2.5 p-3 rounded border cursor-pointer select-none transition-all ${
+                  sendChannel === "whatsapp" 
+                    ? "bg-emerald-950/30 border-emerald-500/50 text-emerald-400 font-semibold text-[11px] shadow-[0_0_15px_rgba(16,185,129,0.1)]" 
+                    : "bg-[#140A0D]/60 border-[#D4B483]/15 text-[#CFC4B5] hover:border-[#D4B483]/30 text-[11px]"
+                }`}>
+                  <input
+                    type="radio"
+                    name="sendChannel"
+                    value="whatsapp"
+                    checked={sendChannel === "whatsapp"}
+                    onChange={() => setSendChannel("whatsapp")}
+                    className="sr-only"
+                  />
+                  <span>🟢 WhatsApp Direct</span>
+                </label>
+
+                <label className={`flex items-center justify-center gap-2.5 p-3 rounded border cursor-pointer select-none transition-all ${
+                  sendChannel === "email" 
+                    ? "bg-[#D4B483]/20 border-[#D4B483]/45 text-[#D4B483] font-semibold text-[11px] shadow-[0_0_15px_rgba(212,180,131,0.15)]" 
+                    : "bg-[#140A0D]/60 border-[#D4B483]/15 text-[#CFC4B5] hover:border-[#D4B483]/30 text-[11px]"
+                }`}>
+                  <input
+                    type="radio"
+                    name="sendChannel"
+                    value="email"
+                    checked={sendChannel === "email"}
+                    onChange={() => setSendChannel("email")}
+                    className="sr-only"
+                  />
+                  <span>✉️ E-mail Officiel</span>
+                </label>
+              </div>
+            </div>
+
+            {/* Error & Success status displays */}
+            <AnimatePresence>
+              {errorMsg && (
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="p-3 bg-rose-950/25 border border-rose-500/30 text-rose-300 text-xs text-center font-sans">
+                  {errorMsg}
+                </motion.div>
+              )}
+              {successMsg && (
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="p-4 bg-emerald-950/30 border border-emerald-500/30 text-emerald-300 text-sm font-sans text-center rounded">
+                  <p className="font-bold mb-1">✓ Demande Enregistrée !</p>
+                  <p className="text-xs text-[#F8F4EE]">{successMsg}</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className={`w-full py-4 rounded text-xs font-mono tracking-widest uppercase font-bold transition-all duration-300 cursor-pointer flex items-center justify-center gap-2 border ${
+                sendChannel === "whatsapp"
+                  ? "bg-emerald-600 border-emerald-500 hover:bg-emerald-500 text-white shadow-[0_4px_20px_rgba(16,185,129,0.2)]"
+                  : "bg-gradient-to-r from-[#D4B483] to-[#E7C9A9] hover:from-[#E7C9A9] hover:to-[#F8F4EE] text-[#140A0D] border-[#E7C9A9]/20 shadow-[0_5px_22px_rgba(212,180,131,0.3)] hover:scale-[1.01] hover:shadow-[0_8px_30px_rgba(212,180,131,0.55)]"
+              }`}
+            >
+              <span>
+                {loading ? "TRAITEMENT..." : "Envoyer Ma Demande"}
+              </span>
+            </button>
+          </form>
+
+        </section>
+
+        {/* 5. CONTACT SECTION */}
+        <section id="contact" className="py-20 border-t border-white/5 space-y-8 text-center max-w-2xl mx-auto relative">
+          {/* Subtle elegant backdrop glow */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[200px] bg-[radial-gradient(circle,rgba(212,180,131,0.04)_0%,transparent_70%)] pointer-events-none z-0"></div>
+
+          <div className="space-y-2 relative z-10">
+            <span className="text-[10px] font-mono tracking-widest text-[#D4B483] uppercase font-bold">Rester en contact</span>
+            <h2 className="text-3xl font-serif text-[#F8F4EE] tracking-tight">Contact</h2>
+            <div className="w-10 h-[1px] bg-[#D4B483]/30 mx-auto mt-4"></div>
+          </div>
+
+          <p className="text-sm text-[#CFC4B5] font-sans leading-relaxed relative z-10">
+            Pour toute demande d'accompagnement privilégié ou question de style, contactez-nous directement via nos réseaux de confiance :
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 font-mono text-xs flex-wrap relative z-10">
+            <a 
+              href="https://wa.me/18094151842" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="flex items-center justify-center gap-2.5 px-6 py-4 bg-gradient-to-br from-[#2A1018] to-[#4A1525] hover:from-[#1b4332]/40 hover:to-[#2d6a4f]/45 border border-[#D4B483]/15 hover:border-emerald-500/40 text-[#CFC4B5] hover:text-emerald-300 w-full sm:w-auto rounded-xl transition-all shadow-md"
+            >
+              <Phone className="w-4 h-4 text-emerald-500" />
+              <span>WhatsApp : +1 (809) 415-1842</span>
+            </a>
+
+            <a 
+              href="https://instagram.com/queen_laika20" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="flex items-center justify-center gap-2.5 px-6 py-4 bg-gradient-to-br from-[#2A1018] to-[#4A1525] border border-[#D4B483]/15 hover:border-[#D4B483]/50 hover:from-[#3A1220] hover:to-[#5A1C30] text-[#CFC4B5] hover:text-[#E7C9A9] w-full sm:w-auto rounded-xl transition-all shadow-md"
+            >
+              <Instagram className="w-4 h-4 text-pink-450" />
+              <span>Instagram : @queen_laika20</span>
+            </a>
+
+            <a 
+              href="mailto:laikadb.me@gmail.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2.5 px-6 py-4 bg-gradient-to-br from-[#2A1018] to-[#4A1525] border border-[#D4B483]/15 hover:border-[#D4B483]/50 hover:from-[#3A1220] hover:to-[#5A1C30] text-[#CFC4B5] hover:text-[#E7C9A9] w-full sm:w-auto rounded-xl transition-all shadow-md"
+            >
+              <Mail className="w-4 h-4 text-[#D4B483]" />
+              <span>Email : laikadb.me@gmail.com</span>
+            </a>
+
+            <a 
+              href="https://www.tiktok.com/@kayoo1236" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="flex items-center justify-center gap-2.5 px-6 py-4 bg-gradient-to-br from-[#2A1018] to-[#4A1525] border border-[#D4B483]/15 hover:border-[#D4B483]/50 hover:from-[#3A1220] hover:to-[#5A1C30] text-[#CFC4B5] hover:text-[#E7C9A9] w-full sm:w-auto rounded-xl transition-all shadow-md"
+            >
+              <svg className="w-4 h-4 text-[#D4B483]" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.01 1.74 4.05 1.12.98 2.61 1.49 4.11 1.48v3.83c-1.4-.01-2.79-.47-3.92-1.3-.39-.29-.74-.63-1.04-1.01V15c0 1.95-.56 3.89-1.68 5.43-1.77 2.4-4.8 3.69-7.79 3.25-3.32-.48-6.1-3.13-6.6-6.47-.64-4.31 2.21-8.52 6.55-9.28 1.25-.22 2.54-.08 3.72.4V12c-.9-.46-1.95-.58-2.94-.3-1.48.42-2.61 1.76-2.82 3.28-.3 2.18 1.15 4.31 3.32 4.74 2.1.42 4.28-.81 4.88-2.89.17-.58.21-1.19.2-1.79V.02z"/>
+              </svg>
+              <span>TikTok : @kayoo1236</span>
+            </a>
+          </div>
+
+          <p className="text-[#CFC4B5] text-xs font-serif italic max-w-lg mx-auto leading-relaxed pt-2 relative z-10">
+            "Suivez Kayoo Queen sur TikTok pour découvrir nos créations et expériences digitales."
+          </p>
+        </section>
+
+      </main>
+
+      {/* 6. FOOTER */}
+      <footer className="bg-[#140A0D] py-16 px-4 border-t border-white/5 relative z-10 text-center">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-8 text-[11px] text-[#CFC4B5] font-sans">
+          <div className="text-center sm:text-left space-y-1.5">
+            <h4 className="font-serif text-[#F8F4EE] font-medium text-base tracking-[0.15em]">DIGITAL LOVE EXPERIENCE™</h4>
+            <p className="text-xs text-[#CFC4B5]">
+              Des souvenirs transformés en expériences digitales inoubliables.
+            </p>
+          </div>
+
+          <div className="text-center sm:text-right space-y-2">
+            <p className="text-[#D4B483] tracking-widest uppercase font-serif italic">
+              Chaque histoire mérite une œuvre d'éternité. ❤️
+            </p>
+            <div className="flex justify-center sm:justify-end gap-4 text-xs font-mono text-[#CFC4B5]/80 hover:text-[#D4B483] transition-colors mt-2">
+              <a 
+                href="https://www.tiktok.com/@kayoo1236" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="hover:text-white flex items-center gap-1.5 transition-colors"
+                title="Kayoo Queen 👑 sur TikTok"
+              >
+                <svg className="w-3.5 h-3.5 fill-[#D4B483]" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.01 1.74 4.05 1.12.98 2.61 1.49 4.11 1.48v3.83c-1.4-.01-2.79-.47-3.92-1.3-.39-.29-.74-.63-1.04-1.01V15c0 1.95-.56 3.89-1.68 5.43-1.77 2.4-4.8 3.69-7.79 3.25-3.32-.48-6.1-3.13-6.6-6.47-.64-4.31 2.21-8.52 6.55-9.28 1.25-.22 2.54-.08 3.72.4V12c-.9-.46-1.95-.58-2.94-.3-1.48.42-2.61 1.76-2.82 3.28-.3 2.18 1.15 4.31 3.32 4.74 2.1.42 4.28-.81 4.88-2.89.17-.58.21-1.19.2-1.79V.02z"/>
+                </svg>
+                <span>Kayoo Queen 👑</span>
+              </a>
+            </div>
+            <p className="text-[9px] text-[#CFC4B5]/75 uppercase font-mono">
+              &copy; {new Date().getFullYear()} Digital Love Experience. Tous droits réservés.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
