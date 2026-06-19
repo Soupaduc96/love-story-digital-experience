@@ -18,15 +18,15 @@ const FAQ_ITEMS: FaqItem[] = [
   },
   {
     question: "Combien de temps l'écrin numérique reste-t-il accessible ?",
-    answer: "Pour les formules Premium et Luxury Signature, l'hébergement de votre oeuvre numérique est assuré à vie dans notre infrastructure hautement disponible de prestige. Le lien de célébration reste accessible de façon permanente, sécurisée et pérenne."
+    answer: "Pour toutes nos formules, l'hébergement de votre œuvre numérique est assuré pour toujours dans notre infrastructure de prestige hautement disponible. Le lien de célébration reste accessible de façon permanente, sécurisée et pérenne."
   },
   {
     question: "Puis-je personnaliser la bande son d'accompagnement ?",
-    answer: "Absolument. Nos orfèvres digitaux associent à chaque ambiance stylistique (vibe suggestions) des harmonies sonores impeccables : piano néo-classique, violoncelle émouvant ou nappes sonores rêveuses. Vous pouvez également nous confier vos propres enregistrements et thèmes de prédilection."
+    answer: "Absolument. Selon votre formule, nous intégrons votre musique de prédilection ou bande-son personnalisée avec des harmonies sonores impeccables pour soutenir l'émotion de vos récits et de vos souvenirs."
   },
   {
     question: "Quel est le délai de livraison pour un projet sur-mesure ?",
-    answer: "Nos délais varient de 1 à 3 jours pour la formule Essential, et de 5 à 10 jours pour une création Luxury Signature entièrement ciselée par nos designers de prestige. Nous ajustons nos rangs pour respecter impérativement votre date de livraison souhaitée."
+    answer: "Nos délais de création d'orfèvrerie digitale sont extrêmement rapides : de 24-48h pour la formule Essential, 3 à 5 jours pour Premium, et de 7 à 14 jours pour la formule Signature d'exception. Nous proposons également des options de livraison express prioritaire."
   }
 ];
 

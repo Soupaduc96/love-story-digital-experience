@@ -13,6 +13,18 @@ const PORT = 3000;
 
 app.use(express.json());
 
+// Global logger to diagnose asset requests
+app.use((req, res, next) => {
+  console.log(`[REQUESTED_PATH] ${req.method} ${req.url}`);
+  next();
+});
+
+// Explicitly handle input_file requests by returning 404 so that the AI Studio platform's proxy can intercept and resolve them from chat attachments in the browser
+app.get("/input_file_*", (req, res) => {
+  console.log(`[INPUT_FILE_MATCHED] returning 404 for ${req.url}`);
+  res.status(404).end();
+});
+
 const LEADS_FILE = path.join(process.cwd(), "leads_db.json");
 
 const PRESET_MOCK_LEADS = [

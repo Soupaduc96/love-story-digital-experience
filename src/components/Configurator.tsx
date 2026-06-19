@@ -9,55 +9,55 @@ import { createLead } from "../leadService";
 const PRICING_TIERS: PricingTier[] = [
   {
     id: "essential",
-    title: "🥉 ESSENTIAL",
-    badge: "Essentiel",
-    price: 99,
-    deliveryTime: "1 à 3 jours",
-    photosCount: "Jusqu'à 10 photos",
+    title: "❤️ ESSENTIAL",
+    badge: "Essential",
+    price: 49,
+    deliveryTime: "24-48h",
+    photosCount: "Jusqu'à 15 photos",
     colorClass: "border-white/10 text-slate-300 bg-card-dark hover:border-white/20",
     features: [
-      "Design personnalisé de base",
-      "Musique de fond instrumentale",
-      "Galerie interactive classique",
-      "Message d'introduction personnalisé",
-      "Lien unique partageable",
+      "Compte à rebours personnalisé",
+      "Jusqu'à 15 photos",
+      "Message personnalisé (amour, famille, amitié, hommage)",
+      "Design premium",
+      "QR Code souvenir personnalisé",
     ]
   },
   {
     id: "premium",
-    title: "🥈 PREMIUM",
-    badge: "Plus Populaire",
-    price: 249,
-    deliveryTime: "3 à 5 jours",
-    photosCount: "Jusqu'à 30 photos",
-    colorClass: "border-brand-gold/30 text-white bg-[#151515] hover:shadow-[0_4px_30px_rgba(161,130,74,0.12)]",
+    title: "💎 PREMIUM",
+    badge: "Le plus choisi",
+    price: 99,
+    deliveryTime: "3-5 jours",
+    photosCount: "Jusqu'à 50 photos",
+    colorClass: "border-[#D4B483]/30 text-white bg-[#1a0f12] hover:shadow-[0_4px_30px_rgba(212,180,131,0.12)]",
     features: [
-      "Storytelling écrit personnalisé",
-      "Chronologie interactive (Timeline)",
-      "Lettre d'émotion rédigée",
+      "Tout Essential inclus",
+      "Jusqu'à 50 photos",
+      "1 vidéo souvenir intégrée",
       "Musique personnalisée",
-      "Animations avancées fluides",
-      "Optimisé mobile & tablette",
-      "Lien unique partageable",
+      "Histoire de votre relation ou souvenir",
+      "Animations premium",
+      "Expérience plus immersive",
     ]
   },
   {
     id: "luxury",
-    title: "🥇 LUXURY SIGNATURE",
-    badge: "Prestige Ultime",
-    price: 499,
-    deliveryTime: "5 à 10 jours",
-    photosCount: "Photos illimitées",
-    colorClass: "border-brand-gold shadow-[0_4px_30px_rgba(161,130,74,0.18)] text-white bg-[#1e1e1e] hover:border-amber-400",
+    title: "👑 SIGNATURE",
+    badge: "Signature VIP",
+    price: 199,
+    deliveryTime: "7-14 jours",
+    photosCount: "Jusqu'à 150 photos",
+    colorClass: "border-[#D4B483] shadow-[0_4px_30px_rgba(212,180,131,0.18)] text-white bg-[#221216] hover:border-amber-400",
     features: [
-      "Expérience cinématographique",
-      "Storytelling créatif premium",
-      "Bougies interactives animées",
-      "Pétales de roses ou étoiles flottantes",
-      "Faisceaux de particules magiques",
-      "Design luxueux exclusif",
-      "Hébergement web Premium inclus",
-      "Support conciergerie VIP dédié",
+      "Tout Premium inclus",
+      "Jusqu'à 150 photos",
+      "Jusqu'à 3 vidéos",
+      "Domaine personnalisé (.fr, .com...)",
+      "Timeline interactive",
+      "Livre souvenir digital PDF",
+      "Expérience entièrement personnalisée",
+      "Support prioritaire",
     ]
   }
 ];
@@ -256,8 +256,8 @@ export default function Configurator({ selectedExperienceType, onGenerationCompl
                             selectedExperienceType === "wedding" ? "Wedding Experience" :
                             selectedExperienceType === "memorial" ? "Memorial Experience" : "Custom Experience";
 
-    const formulaLabel = config.selectedFormula === "essential" ? "ESSENTIAL ($99)" :
-                         config.selectedFormula === "premium" ? "PREMIUM ($249)" : "LUXURY SIGNATURE ($499)";
+    const formulaLabel = config.selectedFormula === "essential" ? "ESSENTIAL ($49)" :
+                         config.selectedFormula === "premium" ? "PREMIUM ($99)" : "SIGNATURE ($199)";
 
     const namesText = config.names ? config.names : "Non spécifié";
     const vibeText = config.vibe ? config.vibe : "Non spécifié";
@@ -310,9 +310,9 @@ export default function Configurator({ selectedExperienceType, onGenerationCompl
     };
 
     const mapFormulaToBudget = (formula: string): string => {
-      if (formula === "essential") return "$99 - $249";
-      if (formula === "premium") return "$249 - $500";
-      return "$500+";
+      if (formula === "essential") return "$49";
+      if (formula === "premium") return "$99";
+      return "$199";
     };
 
     const experienceLabel = mapTypeToService(selectedExperienceType);

@@ -135,17 +135,53 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#140A0D] text-[#F8F4EE] font-sans selection:bg-[#D4B483]/30 relative overflow-x-hidden antialiased">
       
-      {/* Global Background Image (input_file_2.png) with a premium luxury overlay */}
-      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden select-none">
-        <img 
-          src="/input_file_2.png" 
-          alt="Luxury romantic background atmosphere" 
-          className="w-full h-full object-cover object-center scale-[1.03] opacity-15 saturate-[0.60] brightness-[0.70] filter blur-[1px]"
-          referrerPolicy="no-referrer"
-        />
+      {/* Global Luxury Atmosphere Background */}
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden select-none bg-[#140A0D]">
+        {/* Deep luxurious burgundy radial and linear gradient overlays */}
+        <div className="absolute inset-0 bg-radial-gradient from-[#3A1220] via-[#1A0A0E] to-[#0A0305]"></div>
+        
+        {/* Champagne gold ambient glow centers */}
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle,rgba(212,180,131,0.08)_0%,transparent_70%)] blur-3xl opacity-60"></div>
+        <div className="absolute top-2/3 right-1/4 w-[600px] h-[600px] rounded-full bg-[radial-gradient(circle,rgba(212,180,131,0.06)_0%,transparent_70%)] blur-3xl opacity-50"></div>
+        <div className="absolute bottom-10 left-1/3 w-[400px] h-[400px] rounded-full bg-[radial-gradient(circle,rgba(212,180,131,0.05)_0%,transparent_70%)] blur-2xl opacity-40"></div>
+
+        {/* Floating golden sparkling particles and subtle romantic hearts */}
+        <div className="absolute inset-0 opacity-40">
+          {[...Array(12)].map((_, i) => {
+            const size = Math.random() * 8 + 4;
+            const left = Math.random() * 100;
+            const top = Math.random() * 100;
+            const duration = Math.random() * 6 + 10;
+            return (
+              <div 
+                key={i} 
+                className="absolute animate-pulse" 
+                style={{
+                  left: `${left}%`,
+                  top: `${top}%`,
+                  animationDuration: `${duration}s`,
+                }}
+              >
+                {i % 3 === 0 ? (
+                  <Heart className="text-[#D4B483] opacity-20 fill-[#D4B483]/5" style={{ width: size, height: size }} />
+                ) : (
+                  <div className="bg-[#D4B483] rounded-full opacity-35 shadow-[0_0_8px_#D4B483]" style={{ width: size / 2, height: size / 2 }} />
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Elegant abstract fine line curves (gold and burgundy) */}
+        <svg className="absolute inset-0 w-full h-full opacity-10" xmlns="http://www.w3.org/2000/svg">
+          <path d="M-100,200 C300,50 600,600 1200,300" fill="none" stroke="#D4B483" strokeWidth="0.5" />
+          <path d="M0,800 C400,600 800,1050 1400,600" fill="none" stroke="#D4B483" strokeWidth="0.5" strokeDasharray="3 6" />
+          <path d="M-200,500 C200,400 500,800 1100,450" fill="none" stroke="#D4B483" strokeWidth="0.25" />
+        </svg>
+
         {/* Soft elegant burgundy vignette overlay to ensure pristine contrast and legibility */}
-        <div className="absolute inset-0 bg-radial-gradient from-transparent via-[#2A1018]/85 to-[#140A0D]"></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-[#140A0D] via-transparent to-[#140A0D] mix-blend-multiply"></div>
+        <div className="absolute inset-0 bg-radial-gradient from-transparent via-[#2A1018]/45 to-[#140A0D]"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#140A0D] via-transparent to-[#140A0D]"></div>
       </div>
 
       {/* Golden luxury ambient backdrop glow */}
@@ -154,10 +190,15 @@ export default function App() {
       {/* 1. NAVBAR */}
       <header className="sticky top-0 z-40 bg-[#140A0D]/95 backdrop-blur-md border-b border-[#D4B483]/15">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Heart className="w-5 h-5 fill-[#D4B483] text-[#D4B483] filter drop-shadow-[0_0_8px_rgba(212,180,131,0.3)]" />
-            <span className="font-serif text-base tracking-[0.2em] font-medium text-[#F8F4EE] block">
-              DIGITAL LOVE EXPERIENCE™
+          <div className="flex flex-col items-start gap-0.5 justify-center">
+            <div className="flex items-center gap-2">
+              <Heart className="w-5 h-5 fill-[#D4B483] text-[#D4B483] filter drop-shadow-[0_0_8px_rgba(212,180,131,0.45)]" />
+              <span className="font-serif text-sm sm:text-base tracking-[0.2em] font-medium text-[#F8F4EE]">
+                DIGITAL LOVE
+              </span>
+            </div>
+            <span className="text-[8px] font-mono tracking-[0.2em] text-[#D4B483]/90 uppercase block font-bold leading-none">
+              L'ART DE VOUS CÉLÉBRER
             </span>
           </div>
 
@@ -191,17 +232,25 @@ export default function App() {
         {/* 2. HERO SECTION */}
         <section id="accueil" className="relative py-12 sm:py-20 lg:py-28 overflow-hidden rounded-3xl">
           
-          {/* Full-height atmospheric portrait background of Kai (first portrait photo) */}
+          {/* Full-height atmospheric background of golden light sparkles and abstract romance */}
           <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden rounded-3xl">
-            <img 
-              src="/input_file_0.png" 
-              alt="Luxury background atmosphere" 
-              className="w-full h-full object-cover object-top opacity-30 scale-105"
-              referrerPolicy="no-referrer"
-            />
+            {/* Deep elegant gradient meshes */}
+            <div className="absolute inset-0 bg-[#1D0610] opacity-80"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(212,180,131,0.18)_0%,rgba(74,21,37,0.4)_45%,transparent_75%)]"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,rgba(212,180,131,0.12)_0%,rgba(42,16,24,0.3)_50%,transparent_75%)]"></div>
+            
+            {/* Sparkling abstract romantic hearts glow */}
+            <div className="absolute inset-0">
+              <div className="absolute top-1/3 right-1/4 w-32 h-32 bg-[#D4B483]/10 rounded-full blur-2xl animate-pulse"></div>
+              <div className="absolute bottom-1/4 left-1/3 w-48 h-48 bg-[#4A1525]/30 rounded-full blur-3xl"></div>
+            </div>
+
+            {/* Subtle soft particle dots */}
+            <div className="absolute inset-0 opacity-30 bg-[radial-gradient(#D4B483_1px,transparent_1px)] [background-size:16px_16px]"></div>
+
             {/* Burgundy Overlay (75%) and Gradient overlay from left to right to preserve contrast */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#140A0D]/95 via-[#2A1018]/85 to-[#140A0D]/70 mix-blend-multiply"></div>
-            <div className="absolute inset-0 bg-gradient-to-t from-[#140A0D] via-[#2A1018]/30 to-[#140A0D]"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-[#140A0D]/95 via-[#2A1018]/80 to-[#140A0D]/70 mix-blend-multiply"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-[#140A0D] via-[#2A1018]/10 to-[#140A0D]"></div>
           </div>
 
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
@@ -256,28 +305,63 @@ export default function App() {
               </div>
             </div>
 
-            {/* Right Image Frame Column (Strongest photo input_file_0.png in premium frame) */}
-            <div className="lg:col-span-5 flex justify-center">
+            {/* Right Side - Luxury Core Emblem (Glassmorphism & Sacred Geometry of Love) */}
+            <div className="lg:col-span-5 flex justify-center relative z-10 w-full">
               <div className="relative group max-w-sm sm:max-w-md w-full">
                 
                 {/* Backglow shadow effect */}
                 <div className="absolute -inset-1.5 bg-gradient-to-r from-[#D4B483] to-[#E7C9A9] rounded-[2rem] blur opacity-25 group-hover:opacity-45 transition duration-1000"></div>
                 
                 {/* Main luxury frame */}
-                <div className="relative p-3 bg-gradient-to-br from-[#2A1018] to-[#4A1525] rounded-[1.8rem] border border-[#D4B483]/20 shadow-2xl overflow-hidden">
+                <div className="relative p-5 bg-gradient-to-br from-[#2A1018]/90 to-[#4A1525]/90 border border-[#D4B483]/25 rounded-[1.8rem] shadow-2xl overflow-hidden backdrop-blur-xl">
                   
                   {/* Subtle golden glare overlay */}
-                  <div className="absolute -inset-y-12 -inset-x-0 w-[200%] bg-gradient-to-r from-transparent via-[#E7C9A9]/5 to-transparent -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-out"></div>
+                  <div className="absolute -inset-y-12 -inset-x-0 w-[200%] bg-gradient-to-r from-transparent via-[#E7C9A9]/10 to-transparent -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-out"></div>
                   
                   {/* Thin gold inner frame */}
-                  <div className="p-1 border border-[#D4B483]/30 rounded-[1.4rem]">
-                    <div className="relative overflow-hidden rounded-[1.2rem] aspect-[3/4] bg-[#140A0D] shadow-inner">
-                      <img
-                        src="/input_file_0.png"
-                        alt="Kai Portrait"
-                        className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
-                        referrerPolicy="no-referrer"
-                      />
+                  <div className="p-4 border border-[#D4B483]/30 rounded-[1.4rem] bg-[#140A0D]/70 relative">
+                    
+                    {/* Spinning gold ambient orbits/rings in background */}
+                    <div className="absolute inset-0 flex items-center justify-center opacity-60 pointer-events-none overflow-hidden">
+                      <div className="w-[110%] h-[110%] absolute rounded-full border border-[#D4B483]/10 animate-spin" style={{ animationDuration: '30s' }}></div>
+                      <div className="w-[90%] h-[90%] absolute rounded-full border border-dashed border-[#D4B483]/15 animate-spin" style={{ animationDuration: '20s', animationDirection: 'reverse' }}></div>
+                      <div className="w-[70%] h-[70%] absolute rounded-full border border-[#D4B483]/20 animate-pulse"></div>
+                    </div>
+
+                    <div className="relative overflow-hidden rounded-[1.2rem] aspect-[3/4] flex flex-col items-center justify-between p-6 sm:p-8 text-center bg-gradient-to-b from-[#2A1018]/90 via-[#140A0D]/95 to-[#4A1525]/95">
+                      
+                      {/* Romantic design crown indicator */}
+                      <div className="space-y-1.5">
+                        <span className="text-[9px] font-mono tracking-[0.3em] text-[#D4B483] uppercase block">Digital Love</span>
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#D4B483] mx-auto"></div>
+                      </div>
+
+                      {/* Giant Central Floating Heart Emblem */}
+                      <div className="relative py-4">
+                        {/* Multiple overlapping pulsing waves */}
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-[#D4B483]/10 rounded-full blur-xl animate-ping opacity-35" style={{ animationDuration: '3s' }}></div>
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 bg-[#E7C9A9]/5 rounded-full blur-lg animate-pulse" style={{ animationDuration: '2s' }}></div>
+                        
+                        <div className="relative z-10 w-20 h-20 rounded-full bg-gradient-to-br from-[#D4B483] to-[#E7C9A9] flex items-center justify-center shadow-2xl border border-[#F8F4EE]/25 transform group-hover:scale-105 transition-all duration-500">
+                          <Heart className="w-9 h-9 fill-[#140A0D] text-[#140A0D] filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.3)] animate-pulse" />
+                        </div>
+                      </div>
+
+                      {/* Romantic typography engrave focus */}
+                      <div className="space-y-4">
+                        <div className="w-8 h-[1px] bg-[#D4B483]/40 mx-auto"></div>
+                        <h3 className="font-serif text-[#F8F4EE] text-sm sm:text-base font-normal leading-relaxed tracking-wider">
+                          « Vos plus beaux souvenirs précieux sublimés dans un sanctuaire digital d'éternité »
+                        </h3>
+                        <p className="text-[10px] font-mono tracking-widest text-[#D4B483] uppercase">
+                          CÉLÉBRATION DE PRESTIGE
+                        </p>
+                      </div>
+
+                      {/* Footer micro brand stamp */}
+                      <div className="text-[8px] font-mono tracking-[0.25em] text-[#CFC4B5]/60 uppercase">
+                        Maison d'Art Numérique
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -355,14 +439,15 @@ export default function App() {
         {/* 3. PRICING SECTION */}
         <section id="formules" className="py-16 space-y-12 border-t border-white/5 relative overflow-hidden rounded-3xl">
           
-          {/* Faded luxurious background portrait of Kai (second photo) with absolute position */}
+          {/* Premium luxurious gold line art mesh background */}
           <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-            <img 
-              src="/input_file_1.png" 
-              alt="Faded luxury romantic backdrop" 
-              className="absolute right-0 top-1/2 -translate-y-1/2 w-full md:w-3/4 max-w-2xl h-auto object-cover opacity-12 mix-blend-overlay saturate-50 brightness-75 filter blur-[1px]"
-              referrerPolicy="no-referrer"
-            />
+            <svg className="absolute right-0 top-1/2 -translate-y-1/2 w-full md:w-3/4 max-w-2xl h-auto opacity-10" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="200" cy="200" r="160" stroke="#D4B483" strokeWidth="0.5" strokeDasharray="2 4" />
+              <circle cx="200" cy="200" r="120" stroke="#D4B483" strokeWidth="0.75" />
+              <circle cx="200" cy="200" r="80" stroke="#D4B483" strokeWidth="0.5" strokeDasharray="4 8" />
+              <path d="M200,40 L200,360 M40,200 L360,200" stroke="#D4B483" strokeWidth="0.5" strokeOpacity="0.5" />
+              <path d="M80,80 L320,320 M80,320 L320,80" stroke="#D4B483" strokeWidth="0.25" strokeOpacity="0.3" />
+            </svg>
             {/* Burgundy radial vignette overlay to make cards pop out flawlessly */}
             <div className="absolute inset-0 bg-gradient-to-t from-[#140A0D] via-[#2A1018]/45 to-[#140A0D]"></div>
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[350px] bg-[radial-gradient(circle,rgba(212,180,131,0.06)_0%,transparent_70%)]"></div>
@@ -430,24 +515,24 @@ export default function App() {
                   <span className="text-xl">❤️</span>
                   <span className="text-[9px] font-mono tracking-widest uppercase bg-white/5 py-1 px-2.5 rounded text-[#F8F4EE] border border-white/5">ESSENTIAL</span>
                 </div>
-                <h3 className="font-serif text-2xl text-[#F8F4EE] tracking-wide">ESSENTIAL</h3>
+                <h3 className="font-serif text-2xl text-[#F8F4EE] tracking-wide">❤️ ESSENTIAL</h3>
                 <div className="flex items-baseline gap-1 mt-2 mb-6 border-b border-white/5 pb-5">
                   <span className="text-3xl font-serif text-[#D4B483] font-normal">49$</span>
                   <span className="text-[#CFC4B5] text-xs font-mono">USD</span>
                 </div>
                 
-                <ul className="space-y-4 mb-8 text-xs text-[#CFC4B5] font-sans">
+                <ul className="space-y-4 mb-6 text-xs text-[#CFC4B5] font-sans">
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
                     <span>Compte à rebours personnalisé</span>
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
-                    <span>Galerie photos</span>
+                    <span>Jusqu'à 15 photos</span>
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
-                    <span>Message personnalisé (amour, amitié, hommage...)</span>
+                    <span>Message personnalisé (amour, famille, amitié, hommage)</span>
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
@@ -455,21 +540,32 @@ export default function App() {
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
-                    <span>QR Code</span>
+                    <span>QR Code souvenir personnalisé</span>
                   </li>
                 </ul>
+
+                <div className="mt-4 pt-4 border-t border-white/5 space-y-2 text-xs text-[#CFC4B5] font-sans">
+                  <div className="flex items-center gap-2">
+                    <span>⏱️</span>
+                    <span>Livraison : 24-48h</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs">
+                    <span>⚡</span>
+                    <span>Option prioritaire sous 24h (+15$)</span>
+                  </div>
+                </div>
               </div>
 
               <a
                 href="#reservations"
                 onClick={() => handleFormulaSelect("essential")}
-                className={`w-full py-3.5 rounded text-center text-[10px] font-mono tracking-widest uppercase transition-all duration-300 ${
+                className={`w-full py-3.5 mt-6 rounded text-center text-xs font-serif font-semibold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 ${
                   formData.formula === "essential"
                     ? "bg-gradient-to-r from-[#D4B483] to-[#E7C9A9] text-[#140A0D] font-bold shadow-lg shadow-[#D4B483]/20"
-                    : "bg-transparent text-[#D4B483] border border-[#D4B483]/35 hover:bg-[#D4B483]/10"
+                    : "bg-transparent hover:bg-[#D4B483] hover:text-[#140A0D] text-[#D4B483] border border-[#D4B483]/35"
                 }`}
               >
-                Créer Mon Souvenir
+                ❤️ Créer ma surprise
               </a>
             </div>
 
@@ -494,7 +590,15 @@ export default function App() {
                 <ul className="space-y-4 text-xs text-[#CFC4B5] font-sans">
                   <li className="flex items-center gap-2.5 font-medium text-[#E7C9A9]">
                     <Check className="w-4 h-4 text-[#E7C9A9] shrink-0" />
-                    <span>Tout Essential</span>
+                    <span>Tout Essential inclus</span>
+                  </li>
+                  <li className="flex items-center gap-2.5">
+                    <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
+                    <span>Jusqu'à 50 photos</span>
+                  </li>
+                  <li className="flex items-center gap-2.5 text-[#E7C9A9]">
+                    <Check className="w-4 h-4 text-[#E7C9A9] shrink-0" />
+                    <span>1 vidéo souvenir intégrée</span>
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
@@ -502,19 +606,15 @@ export default function App() {
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
-                    <span>Histoire de votre relation / souvenirs</span>
+                    <span>Histoire de votre relation ou souvenir</span>
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
                     <span>Animations premium</span>
                   </li>
-                  <li className="flex items-center gap-2.5">
-                    <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
-                    <span>Jusqu'à 30 photos</span>
-                  </li>
-                  <li className="flex items-center gap-2.5 text-[#E7C9A9]">
+                  <li className="flex items-center gap-2.5 font-medium text-[#E7C9A9]">
                     <Check className="w-4 h-4 text-[#E7C9A9] shrink-0" />
-                    <span>Vidéo intégrée</span>
+                    <span>Expérience plus immersive</span>
                   </li>
                 </ul>
 
@@ -539,7 +639,7 @@ export default function App() {
                     : "bg-[#D4B483]/10 hover:bg-[#D4B483] hover:text-[#140A0D] text-[#D4B483] border border-[#D4B483]/35"
                 }`}
               >
-                ❤️ Créer Mon Expérience
+                💎 Créer mon expérience
               </a>
             </div>
 
@@ -551,16 +651,24 @@ export default function App() {
                   <span className="text-xl">👑</span>
                   <span className="text-[9px] font-mono tracking-widest uppercase bg-white/5 py-1 px-2.5 rounded text-[#F8F4EE] border border-white/5">SIGNATURE</span>
                 </div>
-                <h3 className="font-serif text-2xl text-[#F8F4EE] tracking-wide">SIGNATURE</h3>
+                <h3 className="font-serif text-2xl text-[#F8F4EE] tracking-wide">👑 SIGNATURE</h3>
                 <div className="flex items-baseline gap-1 mt-2 mb-6 border-b border-white/5 pb-5">
                   <span className="text-3xl font-serif text-[#D4B483] font-normal">199$</span>
                   <span className="text-[#CFC4B5] text-xs font-mono">USD</span>
                 </div>
                 
-                <ul className="space-y-4 mb-8 text-xs text-[#CFC4B5] font-sans">
+                <ul className="space-y-4 text-xs text-[#CFC4B5] font-sans">
                   <li className="flex items-center gap-2.5 text-[#D4B483] font-medium">
                     <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
-                    <span>Tout Premium</span>
+                    <span>Tout Premium inclus</span>
+                  </li>
+                  <li className="flex items-center gap-2.5">
+                    <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
+                    <span>Jusqu'à 150 photos</span>
+                  </li>
+                  <li className="flex items-center gap-2.5">
+                    <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
+                    <span>Jusqu'à 3 vidéos</span>
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
@@ -572,58 +680,89 @@ export default function App() {
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
-                    <span>Livre d'or digital ou hommage</span>
+                    <span>Livre souvenir digital PDF</span>
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
-                    <span>Expérience ultra personnalisée</span>
+                    <span>Expérience entièrement personnalisée</span>
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
                     <span>Support prioritaire</span>
                   </li>
                 </ul>
+
+                <div className="mt-6 pt-5 border-t border-white/5 space-y-2.5 text-xs text-[#CFC4B5] font-sans">
+                  <div className="flex items-center gap-2">
+                    <span>⏱️</span>
+                    <span>Livraison : 7-14 jours</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span>⚡</span>
+                    <span className="text-[#E7C9A9]">Livraison prioritaire (+50$)</span>
+                  </div>
+                </div>
               </div>
 
               <a
                 href="#reservations"
                 onClick={() => handleFormulaSelect("signature")}
-                className={`w-full py-3.5 rounded text-center text-[10px] font-mono tracking-widest uppercase transition-all duration-300 ${
+                className={`w-full py-4 mt-6 rounded text-center text-xs font-serif font-semibold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 ${
                   formData.formula === "signature"
                     ? "bg-gradient-to-r from-[#D4B483] to-[#E7C9A9] text-[#140A0D] font-bold shadow-lg shadow-[#D4B483]/20"
                     : "bg-transparent text-[#D4B483] border border-[#D4B483]/35 hover:bg-[#D4B483]/10"
                 }`}
               >
-                Créer Mon Projet VIP
+                👑 Créer mon expérience VIP
               </a>
             </div>
 
+          </div>
+
+          {/* Short Payment Policy terms below Formulas Grid */}
+          <div className="max-w-3xl mx-auto bg-gradient-to-r from-[#2A1018]/40 via-[#4A1525]/30 to-[#2A1018]/40 border border-[#D4B483]/15 rounded-2xl p-5 mt-10 relative z-10 text-center shadow-lg">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+              <div className="flex items-center gap-3 shrink-0 mx-auto sm:mx-0">
+                <span className="text-2xl text-[#D4B483]">💳</span>
+                <div className="text-left">
+                  <h4 className="font-serif text-[#F8F4EE] text-sm font-semibold tracking-wide uppercase">Paiement sécurisé</h4>
+                  <p className="text-[10px] font-sans text-[#CFC4B5]">Garantie d'une création numérique d'exception</p>
+                </div>
+              </div>
+              <div className="h-[1px] w-full sm:h-8 sm:w-[1px] bg-[#D4B483]/20"></div>
+              <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-[#CFC4B5]">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[#D4B483] font-bold">✓</span>
+                  <span>Paiement complet à la commande</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[#D4B483] font-bold">✓</span>
+                  <span>Création 100% personnalisée</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[#D4B483] font-bold">✓</span>
+                  <span>Livraison selon la formule choisie</span>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
         {/* 4. RESERVATION FORM */}
         <section id="reservations" className="py-16 border-t border-white/5 grid grid-cols-1 lg:grid-cols-12 gap-12 relative overflow-hidden rounded-3xl px-4 sm:px-6">
           
-          {/* Subtle luxurious collage background using both photos of Kai */}
+          {/* Subtle luxurious abstract patterns in background instead of personal collage */}
           <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-            <div className="absolute top-12 -left-12 w-64 h-64 sm:w-80 sm:h-80 opacity-10 rounded-full overflow-hidden blur-[4px] border border-[#D4B483]/15">
-              <img 
-                src="/input_file_0.png" 
-                alt="Kai Collage Element Left" 
-                className="w-full h-full object-cover grayscale mix-blend-overlay rotate-3 scale-110" 
-                referrerPolicy="no-referrer"
-              />
+            <div className="absolute top-12 -left-12 w-64 h-64 sm:w-80 sm:h-80 opacity-5 rounded-full border border-[#D4B483]/25 flex items-center justify-center">
+              <div className="w-[85%] h-[85%] rounded-full border border-dashed border-[#D4B483]/20"></div>
             </div>
-            <div className="absolute bottom-12 -right-12 w-64 h-64 sm:w-80 sm:h-80 opacity-10 rounded-full overflow-hidden blur-[4px] border border-[#D4B483]/15">
-              <img 
-                src="/input_file_1.png" 
-                alt="Kai Collage Element Right" 
-                className="w-full h-full object-cover grayscale mix-blend-overlay -rotate-6 scale-110" 
-                referrerPolicy="no-referrer"
-              />
+            <div className="absolute bottom-12 -right-12 w-64 h-64 sm:w-80 sm:h-80 opacity-5 rounded-full border border-[#D4B483]/25 flex items-center justify-center">
+              <Heart className="w-16 h-16 text-[#D4B483] stroke-[1]" />
             </div>
+            {/* Golden luxury warm ambient glow center */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] bg-[radial-gradient(circle,rgba(212,180,131,0.08)_0%,transparent_70%)]"></div>
             {/* Burgundy tint overlay across everything */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#140A0D]/95 via-[#2A1018]/60 to-[#140A0D]/95 mix-blend-multiply"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-[#140A0D]/95 via-[#2A1018]/70 to-[#140A0D]/95"></div>
           </div>
 
           <div className="lg:col-span-4 space-y-6 relative z-10">
@@ -635,21 +774,35 @@ export default function App() {
             </p>
 
             <div className="bg-gradient-to-br from-[#2A1018] to-[#4A1525] border border-[#D4B483]/20 p-5 rounded-xl space-y-3.5 text-xs">
-              <span className="block text-[9px] font-mono tracking-widest text-[#D4B483] uppercase font-bold">Précisons de Livraison :</span>
+              <span className="block text-[9px] font-mono tracking-widest text-[#D4B483] uppercase font-bold">Précisions de Livraison :</span>
               <ul className="space-y-3 text-[#CFC4B5]">
                 <li className="flex items-center gap-2.5">
-                  <Check className="w-3.5 h-3.5 text-[#D4B483]" />
-                  <span>Acompte de 50% au lancement, solde de 50% à la livraison</span>
-                </li>
-                <li className="flex items-center gap-2.5">
-                  <Check className="w-3.5 h-3.5 text-[#D4B483]" />
+                  <Check className="w-3.5 h-3.5 text-[#D4B483] shrink-0" />
                   <span>Essential : Livré en 24-48h</span>
                 </li>
                 <li className="flex items-center gap-2.5">
-                  <Check className="w-3.5 h-3.5 text-[#D4B483]" />
+                  <Check className="w-3.5 h-3.5 text-[#D4B483] shrink-0" />
                   <span>Premium : En 3 à 5 jours d'exception</span>
                 </li>
+                <li className="flex items-center gap-2.5">
+                  <Check className="w-3.5 h-3.5 text-[#D4B483] shrink-0" />
+                  <span>Signature : En 7 à 14 jours d'orfèvrerie digitale</span>
+                </li>
               </ul>
+            </div>
+
+            {/* Dedicated premium PAIEMENT block */}
+            <div className="bg-gradient-to-br from-[#2A1018] to-[#4A1525] border border-[#D4B483]/20 p-5 rounded-xl space-y-3.5 text-xs relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-12 h-12 bg-gradient-to-bl from-[#D4B483]/5 to-transparent pointer-events-none"></div>
+              <span className="block text-[9px] font-mono tracking-widest text-[#D4B483] uppercase font-bold">PAIEMENT</span>
+              <div className="space-y-3 text-[#CFC4B5] leading-relaxed">
+                <p>
+                  Chaque expérience étant entièrement personnalisée, la création commence après validation de la commande et réception du paiement complet.
+                </p>
+                <p className="text-[#E7C9A9] font-medium font-serif">
+                  Votre paiement réserve votre place et nous permet de commencer la création de votre expérience digitale.
+                </p>
+              </div>
             </div>
 
             {/* Livraison Express Box */}
@@ -1034,6 +1187,13 @@ export default function App() {
               )}
             </AnimatePresence>
 
+            {/* Premium Ordering Confirmation Policy Note */}
+            <div className="bg-[#140A0D]/60 border border-[#D4B483]/15 p-4 rounded-xl text-center text-xs text-[#CFC4B5] leading-relaxed">
+              <p>
+                Après l'envoi de votre demande, nous vous contacterons pour confirmer les détails et finaliser votre commande.
+              </p>
+            </div>
+
             <button
               type="submit"
               disabled={loading}
@@ -1146,16 +1306,13 @@ export default function App() {
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-[#D4B483]/10 rounded-full blur-xl pointer-events-none"></div>
 
             <div className="relative flex flex-col items-center gap-5">
-              {/* Luxury circular frame with double rings */}
+              {/* Luxury circular frame with a glowing brand crest instead of avatar */}
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-tr from-[#D4B483] to-[#E7C9A9] rounded-full blur-[3px] scale-102 opacity-60"></div>
-                <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-[#D4B483] shadow-lg">
-                  <img 
-                    src="/input_file_1.png" 
-                    alt="Kayoo Queen" 
-                    className="w-full h-full object-cover object-center scale-[1.02] transition-transform duration-500 group-hover:scale-[1.06]"
-                    referrerPolicy="no-referrer"
-                  />
+                <div className="relative w-24 h-24 rounded-full flex items-center justify-center bg-gradient-to-br from-[#2A1018] to-[#4A1525] border-2 border-[#D4B483] shadow-lg">
+                  <div className="flex items-center justify-center">
+                    <Heart className="w-10 h-10 fill-[#D4B483] text-[#D4B483] filter drop-shadow-[0_2px_8px_rgba(212,180,131,0.6)] animate-pulse" />
+                  </div>
                 </div>
                 <span className="absolute -bottom-1 -right-1 bg-gradient-to-r from-[#D4B483] to-[#E7C9A9] text-[#140A0D] p-1.5 rounded-full text-xs font-bold leading-none shadow-md border border-[#F8F4EE]/20">
                   👑
@@ -1196,8 +1353,14 @@ export default function App() {
       {/* 6. FOOTER */}
       <footer className="bg-[#140A0D] py-16 px-4 border-t border-white/5 relative z-10 text-center">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-8 text-[11px] text-[#CFC4B5] font-sans">
-          <div className="text-center sm:text-left space-y-1.5">
-            <h4 className="font-serif text-[#F8F4EE] font-medium text-base tracking-[0.15em]">DIGITAL LOVE EXPERIENCE™</h4>
+          <div className="text-center sm:text-left space-y-2">
+            <div className="flex items-center justify-center sm:justify-start gap-2.5">
+              <Heart className="w-5 h-5 fill-[#D4B483] text-[#D4B483] filter drop-shadow-[0_0_8px_rgba(212,180,131,0.3)]" />
+              <h4 className="font-serif text-[#F8F4EE] font-medium text-base tracking-[0.2em] uppercase">DIGITAL LOVE</h4>
+            </div>
+            <p className="text-[9px] font-mono tracking-[0.2em] text-[#D4B483] uppercase font-bold leading-none">
+              L'ART DE VOUS CÉLÉBRER
+            </p>
             <p className="text-xs text-[#CFC4B5]">
               Des souvenirs transformés en expériences digitales inoubliables.
             </p>
