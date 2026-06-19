@@ -720,29 +720,38 @@ export default function App() {
           </div>
 
           {/* Short Payment Policy terms below Formulas Grid */}
-          <div className="max-w-3xl mx-auto bg-gradient-to-r from-[#2A1018]/40 via-[#4A1525]/30 to-[#2A1018]/40 border border-[#D4B483]/15 rounded-2xl p-5 mt-10 relative z-10 text-center shadow-lg">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
-              <div className="flex items-center gap-3 shrink-0 mx-auto sm:mx-0">
-                <span className="text-2xl text-[#D4B483]">💳</span>
-                <div className="text-left">
-                  <h4 className="font-serif text-[#F8F4EE] text-sm font-semibold tracking-wide uppercase">Paiement sécurisé</h4>
-                  <p className="text-[10px] font-sans text-[#CFC4B5]">Garantie d'une création numérique d'exception</p>
-                </div>
+          <div className="max-w-3xl mx-auto bg-gradient-to-br from-[#2A1018]/90 via-[#4A1525]/85 to-[#2A1018]/90 border border-[#D4B483]/30 rounded-2xl p-6 sm:p-10 mt-12 relative z-10 text-center shadow-2xl backdrop-blur-md">
+            <div className="space-y-6">
+              <div className="flex items-center justify-center gap-3">
+                <span className="text-3xl text-[#D4B483]" id="payment-icon">💳</span>
+                <h3 className="font-serif text-xl sm:text-2xl text-[#F8F4EE] tracking-wide font-medium">Paiement</h3>
               </div>
-              <div className="h-[1px] w-full sm:h-8 sm:w-[1px] bg-[#D4B483]/20"></div>
-              <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-[#CFC4B5]">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-[#D4B483] font-bold">✓</span>
-                  <span>Paiement complet à la commande</span>
+              <div className="max-w-2xl mx-auto text-[#CFC4B5] space-y-4 text-xs sm:text-sm leading-relaxed">
+                <p className="font-semibold text-[#E7C9A9] text-sm sm:text-base">
+                  Chaque expérience est créée sur mesure et entièrement personnalisée.
+                </p>
+                <p>
+                  Après réception de votre demande, nous vous contacterons rapidement sur WhatsApp afin de confirmer les détails de votre projet.
+                </p>
+                <p>
+                  Une fois les informations validées, nous vous communiquerons les modalités de paiement en privé.
+                </p>
+                
+                <div className="bg-[#140A0D]/70 border border-[#D4B483]/20 rounded-xl p-5 max-w-sm mx-auto space-y-3 mt-6">
+                  <span className="block text-[9px] font-mono tracking-[0.15em] text-[#D4B483] uppercase font-bold">Modes de paiement actuellement acceptés :</span>
+                  <div className="flex justify-center gap-6 text-sm text-[#F8F4EE] font-medium font-serif">
+                    <span className="flex items-center gap-1.5">• PayPal</span>
+                    <span className="flex items-center gap-1.5">• Virement bancaire</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="text-[#D4B483] font-bold">✓</span>
-                  <span>Création 100% personnalisée</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="text-[#D4B483] font-bold">✓</span>
-                  <span>Livraison selon la formule choisie</span>
-                </div>
+
+                <p className="text-xs text-[#CFC4B5]/85 pt-4 border-t border-white/5 max-w-md mx-auto">
+                  La création de votre expérience débute après confirmation du paiement.
+                </p>
+                
+                <p className="text-[#D4B483] text-xs font-semibold tracking-wider flex items-center justify-center gap-2 pt-2 uppercase font-mono">
+                  <span>📱</span> Réponse rapide sur WhatsApp.
+                </p>
               </div>
             </div>
           </div>
@@ -792,15 +801,15 @@ export default function App() {
             </div>
 
             {/* Dedicated premium PAIEMENT block */}
-            <div className="bg-gradient-to-br from-[#2A1018] to-[#4A1525] border border-[#D4B483]/20 p-5 rounded-xl space-y-3.5 text-xs relative overflow-hidden">
+            <div className="bg-gradient-to-br from-[#2A1018] to-[#4A1525] border border-[#D4B483]/20 p-5 rounded-xl space-y-3 text-xs relative overflow-hidden">
               <div className="absolute top-0 right-0 w-12 h-12 bg-gradient-to-bl from-[#D4B483]/5 to-transparent pointer-events-none"></div>
-              <span className="block text-[9px] font-mono tracking-widest text-[#D4B483] uppercase font-bold">PAIEMENT</span>
-              <div className="space-y-3 text-[#CFC4B5] leading-relaxed">
+              <span className="block text-[9px] font-mono tracking-widest text-[#D4B483] uppercase font-bold">💳 PAIEMENT</span>
+              <div className="space-y-2.5 text-[#CFC4B5] leading-relaxed">
                 <p>
-                  Chaque expérience étant entièrement personnalisée, la création commence après validation de la commande et réception du paiement complet.
+                  Chaque expérience est créée sur mesure. Après réception de votre demande, nous vous contacterons rapidement sur WhatsApp pour confirmer les détails.
                 </p>
                 <p className="text-[#E7C9A9] font-medium font-serif">
-                  Votre paiement réserve votre place et nous permet de commencer la création de votre expérience digitale.
+                  Les modalités de paiement vous seront communiquées en privé (PayPal ou Virement bancaire).
                 </p>
               </div>
             </div>
@@ -1190,7 +1199,7 @@ export default function App() {
             {/* Premium Ordering Confirmation Policy Note */}
             <div className="bg-[#140A0D]/60 border border-[#D4B483]/15 p-4 rounded-xl text-center text-xs text-[#CFC4B5] leading-relaxed">
               <p>
-                Après l'envoi de votre demande, nous vous contacterons pour confirmer les détails et finaliser votre commande.
+                Une fois votre demande envoyée, nous vous contacterons sur WhatsApp pour discuter de votre projet, répondre à vos questions et vous transmettre les informations de paiement.
               </p>
             </div>
 
@@ -1211,30 +1220,44 @@ export default function App() {
 
         </section>
 
-        {/* 4.5 FINAL URGENCY BLOCK */}
-        <section className="py-12 relative z-10 max-w-3xl mx-auto">
-          <div className="bg-gradient-to-br from-[#33111A] to-[#521727] border border-[#D4B483]/30 rounded-2xl p-6 sm:p-10 text-center space-y-4 shadow-[0_15px_35px_rgba(20,10,13,0.5)] relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-24 h-24 bg-gradient-to-br from-[#D4B483]/5 to-transparent pointer-events-none"></div>
+        {/* 4.5 FINAL URGENCY BLOCK / LUXURY INVITATION */}
+        <section className="py-20 sm:py-24 relative z-10 max-w-4xl mx-auto px-4 sm:px-6">
+          <div className="bg-gradient-to-br from-[#1E0911] via-[#330E1A] to-[#1F0712] border border-[#D4B483]/30 rounded-3xl p-8 sm:p-14 text-center space-y-8 shadow-[0_20px_50px_rgba(20,10,13,0.75)] relative overflow-hidden">
+            {/* Elegant luxury framing effects */}
+            <div className="absolute inset-1 border border-[#D4B483]/10 rounded-[1.4rem] pointer-events-none"></div>
+            <div className="absolute -top-12 -left-12 w-48 h-48 rounded-full bg-[radial-gradient(circle,rgba(212,180,131,0.06)_0%,transparent_70%)] pointer-events-none"></div>
+            <div className="absolute -bottom-12 -right-12 w-56 h-56 rounded-full bg-[radial-gradient(circle,rgba(212,180,131,0.04)_0%,transparent_70%)] pointer-events-none"></div>
             
-            <span className="text-xl sm:text-2xl block">⏳</span>
-            <h3 className="text-lg sm:text-2xl font-serif text-[#F8F4EE] tracking-tight">
-              ⏳ Votre date spéciale approche ?
-            </h3>
+            {/* Subtle elegant vector lighting elements inside the invitation */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-[radial-gradient(circle,rgba(212,180,131,0.08)_0%,transparent_70%)] pointer-events-none"></div>
+
+            {/* Micro heart symbol centered premium emblem at the top of the invitation */}
+            <div className="flex items-center justify-center gap-3">
+              <div className="w-10 h-[1px] bg-[#D4B483]/30"></div>
+              <Heart className="w-5 h-5 fill-[#D4B483] text-[#D4B483] filter drop-shadow-[0_0_8px_rgba(212,180,131,0.4)]" />
+              <div className="w-10 h-[1px] bg-[#D4B483]/30"></div>
+            </div>
+
+            <div className="space-y-4 max-w-2xl mx-auto relative z-10">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif text-[#F8F4EE] tracking-tight leading-tight">
+                Votre moment mérite d'être inoubliable.
+              </h2>
+              
+              <p className="text-xs sm:text-sm text-[#E7C9A9] font-mono tracking-[0.15em] uppercase font-semibold">
+                Anniversaire, hommage, surprise, célébration ou occasion spéciale.
+              </p>
+            </div>
             
-            <p className="text-xs sm:text-sm text-[#E7C9A9] font-mono tracking-wide uppercase">
-              Anniversaire, hommage, surprise, célébration, remerciement ou occasion spéciale...
-            </p>
-            
-            <p className="text-xs sm:text-sm text-[#CFC4B5] max-w-xl mx-auto leading-relaxed">
-              Plus vous réservez tôt, plus nous avons le temps de créer une expérience exceptionnelle.
+            <p className="text-sm sm:text-base text-[#CFC4B5] max-w-xl mx-auto leading-relaxed relative z-10 font-sans font-light">
+              Plus vous réservez tôt, plus nous avons le temps de créer une expérience unique, élégante et entièrement personnalisée.
             </p>
 
-            <div className="pt-3">
+            <div className="pt-4 relative z-10">
               <a 
                 href="#reservations"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#D4B483] to-[#E7C9A9] hover:from-[#E7C9A9] hover:to-[#F8F4EE] text-[#140A0D] font-bold text-[10px] tracking-widest uppercase rounded-lg shadow-lg hover:scale-[1.02] transition-colors"
+                className="inline-flex items-center gap-3 px-8 py-4 sm:px-10 bg-gradient-to-r from-[#D4B483] to-[#E7C9A9] hover:from-[#E7C9A9] hover:to-[#F8F4EE] text-[#140A0D] font-serif font-bold text-sm tracking-wide rounded-lg shadow-xl shadow-[#D4B483]/10 transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
               >
-                ❤️ Réservez votre projet dès aujourd'hui.
+                Réservez votre projet dès aujourd'hui
               </a>
             </div>
           </div>
@@ -1246,13 +1269,13 @@ export default function App() {
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[200px] bg-[radial-gradient(circle,rgba(212,180,131,0.04)_0%,transparent_70%)] pointer-events-none z-0"></div>
 
           <div className="space-y-2 relative z-10">
-            <span className="text-[10px] font-mono tracking-widest text-[#D4B483] uppercase font-bold">Rester en contact</span>
-            <h2 className="text-3xl font-serif text-[#F8F4EE] tracking-tight">Contact</h2>
+            <span className="text-[10px] font-mono tracking-widest text-[#D4B483] uppercase font-bold">Un Accompagnement Privilégié</span>
+            <h2 className="text-3xl md:text-4xl font-serif text-[#F8F4EE] tracking-tight">Besoin d'informations avant de réserver ?</h2>
             <div className="w-10 h-[1px] bg-[#D4B483]/30 mx-auto mt-4"></div>
           </div>
 
-          <p className="text-sm text-[#CFC4B5] font-sans leading-relaxed relative z-10">
-            Pour toute demande d'accompagnement privilégié ou question de style, contactez-nous directement via nos réseaux de confiance :
+          <p className="text-base text-[#CFC4B5] font-sans leading-relaxed relative z-10 font-light px-4">
+            Contactez-nous directement sur WhatsApp. Nous serons ravis de vous accompagner dans la création de votre expérience.
           </p>
 
           {/* Primary Contact CTA requested */}
@@ -1261,9 +1284,9 @@ export default function App() {
               href="https://wa.me/18094151842" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="px-8 py-4 bg-gradient-to-r from-[#D4B483] to-[#E7C9A9] hover:from-[#E7C9A9] hover:to-[#F8F4EE] text-[#140A0D] font-bold text-[11px] tracking-widest uppercase rounded-xl shadow-[0_8px_30px_rgba(212,180,131,0.2)] transition-all duration-300 flex items-center justify-center gap-2 group hover:scale-[1.02]"
+              className="px-8 py-4 bg-gradient-to-r from-[#D4B483] to-[#E7C9A9] hover:from-[#E7C9A9] hover:to-[#F8F4EE] text-[#140A0D] font-serif font-bold text-sm tracking-wide rounded-xl shadow-[0_8px_30px_rgba(212,180,131,0.2)] transition-all duration-300 flex items-center justify-center gap-2 group hover:scale-[1.02]"
             >
-              <span>💬 Discuter de Mon Projet</span>
+              <span>💬 Contactez-nous sur WhatsApp</span>
             </a>
           </div>
 
@@ -1297,6 +1320,18 @@ export default function App() {
               <Mail className="w-4 h-4 text-[#D4B483]" />
               <span>Email : laikadb.me@gmail.com</span>
             </a>
+
+            <a 
+              href="https://www.tiktok.com/@kayoo1236" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="flex items-center justify-center gap-2.5 px-6 py-4 bg-gradient-to-br from-[#2A1018] to-[#4A1525] border border-[#D4B483]/15 hover:border-[#D4B483]/50 hover:from-[#3A1220] hover:to-[#5A1C30] text-[#CFC4B5] hover:text-[#E7C9A9] w-full sm:w-auto rounded-xl transition-all shadow-md"
+            >
+              <svg className="w-4 h-4 fill-[#D4B483] text-[#D4B483]" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.01 1.74 4.05 1.12.98 2.61 1.49 4.11 1.48v3.83c-1.4-.01-2.79-.47-3.92-1.3-.39-.29-.74-.63-1.04-1.01V15c0 1.95-.56 3.89-1.68 5.43-1.77 2.4-4.8 3.69-7.79 3.25-3.32-.48-6.1-3.13-6.6-6.47-.64-4.31 2.21-8.52 6.55-9.28 1.25-.22 2.54-.08 3.72.4V12c-.9-.46-1.95-.58-2.94-.3-1.48.42-2.61 1.76-2.82 3.28-.3 2.18 1.15 4.31 3.32 4.74 2.1.42 4.28-.81 4.88-2.89.17-.58.21-1.19.2-1.79V.02z"/>
+              </svg>
+              <span>TikTok : @kayoo1236</span>
+            </a>
           </div>
 
           {/* SOCIAL PROOF SECTION */}
@@ -1325,24 +1360,9 @@ export default function App() {
                   Créé avec passion par Kayoo Queen 👑
                 </h4>
                 <p className="text-xs text-[#CFC4B5] max-w-sm mx-auto leading-relaxed">
-                  Chaque histoire mérite une signature unique. Suivez nos créations inspirantes sur TikTok pour découvrir l'envers du décor.
+                  Chaque histoire mérite une signature unique.
                 </p>
               </div>
-
-              <div className="w-8 h-[1px] bg-[#D4B483]/30"></div>
-
-              {/* Verified TikTok Button */}
-              <a 
-                href="https://www.tiktok.com/@kayoo1236" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#D4B483]/10 hover:bg-[#D4B483] text-[#D4B483] hover:text-[#140A0D] border border-[#D4B483]/30 hover:border-transparent rounded-xl text-xs font-serif font-semibold tracking-wide transition-all duration-300 shadow-md scale-100 active:scale-95"
-              >
-                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.01 1.74 4.05 1.12.98 2.61 1.49 4.11 1.48v3.83c-1.4-.01-2.79-.47-3.92-1.3-.39-.29-.74-.63-1.04-1.01V15c0 1.95-.56 3.89-1.68 5.43-1.77 2.4-4.8 3.69-7.79 3.25-3.32-.48-6.1-3.13-6.6-6.47-.64-4.31 2.21-8.52 6.55-9.28 1.25-.22 2.54-.08 3.72.4V12c-.9-.46-1.95-.58-2.94-.3-1.48.42-2.61 1.76-2.82 3.28-.3 2.18 1.15 4.31 3.32 4.74 2.1.42 4.28-.81 4.88-2.89.17-.58.21-1.19.2-1.79V.02z"/>
-                </svg>
-                <span>Suivez-nous sur TikTok : @kayoo1236</span>
-              </a>
             </div>
 
           </div>
