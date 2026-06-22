@@ -532,6 +532,10 @@ export default function App() {
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
+                    <span>0 vidéo</span>
+                  </li>
+                  <li className="flex items-center gap-2.5">
+                    <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
                     <span>Message personnalisé (amour, famille, amitié, hommage)</span>
                   </li>
                   <li className="flex items-center gap-2.5">
@@ -546,12 +550,12 @@ export default function App() {
 
                 <div className="mt-4 pt-4 border-t border-white/5 space-y-2 text-xs text-[#CFC4B5] font-sans">
                   <div className="flex items-center gap-2">
-                    <span>⏱️</span>
-                    <span>Livraison : 24-48h</span>
+                    <span>🚚</span>
+                    <span>Livraison : 24 à 48h</span>
                   </div>
                   <div className="flex items-center gap-2 text-xs">
                     <span>⚡</span>
-                    <span>Option prioritaire sous 24h (+15$)</span>
+                    <span>Option prioritaire sous 24h (+15 USD)</span>
                   </div>
                 </div>
               </div>
@@ -565,7 +569,7 @@ export default function App() {
                     : "bg-transparent hover:bg-[#D4B483] hover:text-[#140A0D] text-[#D4B483] border border-[#D4B483]/35"
                 }`}
               >
-                ❤️ Créer ma surprise
+                ❤️ Créer mon expérience
               </a>
             </div>
 
@@ -594,23 +598,23 @@ export default function App() {
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
-                    <span>Jusqu'à 50 photos</span>
-                  </li>
-                  <li className="flex items-center gap-2.5 text-[#E7C9A9]">
-                    <Check className="w-4 h-4 text-[#E7C9A9] shrink-0" />
-                    <span>1 vidéo souvenir intégrée</span>
+                    <span>Jusqu'à 40 photos</span>
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
-                    <span>Musique personnalisée</span>
+                    <span>Jusqu'à 2 vidéos</span>
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
-                    <span>Histoire de votre relation ou souvenir</span>
+                    <span>Timeline de votre histoire</span>
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
-                    <span>Animations premium</span>
+                    <span>Lettre personnalisée</span>
+                  </li>
+                  <li className="flex items-center gap-2.5">
+                    <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
+                    <span>Galerie premium</span>
                   </li>
                   <li className="flex items-center gap-2.5 font-medium text-[#E7C9A9]">
                     <Check className="w-4 h-4 text-[#E7C9A9] shrink-0" />
@@ -620,12 +624,12 @@ export default function App() {
 
                 <div className="mt-6 pt-5 border-t border-white/5 space-y-2.5 text-xs text-[#CFC4B5] font-sans">
                   <div className="flex items-center gap-2">
-                    <span>⏱️</span>
+                    <span>🚚</span>
                     <span>Livraison : 3 à 5 jours</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span>⚡</span>
-                    <span className="text-[#E7C9A9]">Livraison Express : 48h (+25$)</span>
+                    <span className="text-[#E7C9A9]">Livraison Express 48h (+25 USD)</span>
                   </div>
                 </div>
               </div>
@@ -664,42 +668,46 @@ export default function App() {
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
-                    <span>Jusqu'à 150 photos</span>
+                    <span>Jusqu'à 75 photos</span>
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
-                    <span>Jusqu'à 3 vidéos</span>
+                    <span>Jusqu'à 5 vidéos</span>
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
-                    <span>Domaine personnalisé</span>
+                    <span>Timeline premium</span>
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
-                    <span>Timeline interactive</span>
+                    <span>Lettre personnalisée</span>
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
-                    <span>Livre souvenir digital PDF</span>
+                    <span>Galerie VIP</span>
+                  </li>
+                  <li className="flex items-center gap-2.5">
+                    <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
+                    <span>Design exclusif</span>
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
                     <span>Expérience entièrement personnalisée</span>
                   </li>
-                  <li className="flex items-center gap-2.5">
-                    <Check className="w-4 h-4 text-[#D4B483] shrink-0" />
+                  <li className="flex items-center gap-2.5 font-medium text-[#E7C9A9]">
+                    <Check className="w-4 h-4 text-[#E7C9A9] shrink-0" />
                     <span>Support prioritaire</span>
                   </li>
                 </ul>
 
                 <div className="mt-6 pt-5 border-t border-white/5 space-y-2.5 text-xs text-[#CFC4B5] font-sans">
                   <div className="flex items-center gap-2">
-                    <span>⏱️</span>
-                    <span>Livraison : 7-14 jours</span>
+                    <span>🚚</span>
+                    <span>Livraison : 7 à 14 jours</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span>⚡</span>
-                    <span className="text-[#E7C9A9]">Livraison prioritaire (+50$)</span>
+                    <span className="text-[#E7C9A9]">Livraison prioritaire (+50 USD)</span>
                   </div>
                 </div>
               </div>
@@ -717,6 +725,12 @@ export default function App() {
               </a>
             </div>
 
+          </div>
+
+          <div className="text-center mt-8 relative z-10">
+            <p className="text-xs sm:text-sm text-[#CFC4B5] italic">
+              Besoin de plus de photos ou de vidéos ? Une formule sur mesure peut être créée selon votre projet.
+            </p>
           </div>
 
           {/* Short Payment Policy terms below Formulas Grid */}
