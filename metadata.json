@@ -1,6 +1,6 @@
 {
-  "name": "Digital Love Experience™",
-  "description": "Une expérience digitale unique pour célébrer votre histoire d'amour. Transformez vos souvenirs en une œuvre web haut de gamme pour un anniversaire, une demande en mariage, la Saint-Valentin ou simplement pour surprendre votre partenaire.",
+  "name": "Digital Experience™",
+  "description": "Digital Experience™ transforme vos photos, vidéos et souvenirs en une expérience digitale inoubliable à partager avec ceux que vous aimez.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

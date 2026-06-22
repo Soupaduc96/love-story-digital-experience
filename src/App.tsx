@@ -5,27 +5,17 @@ import { createLead } from "./leadService";
 
 export default function App() {
   const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
+    nom: "",
+    prenom: "",
     whatsapp: "",
     formula: "premium" as "essential" | "premium" | "signature",
-    partnerName: "",
-    deliveryDate: "",
+    experienceType: "",
     projectDescription: ""
   });
 
-  const [isExpress, setIsExpress] = useState(false);
-  const [expressType, setExpressType] = useState<"essential" | "premium" | "signature">("premium");
-
-  const [sendChannel, setSendChannel] = useState<"whatsapp" | "email">("whatsapp");
-  const [photos, setPhotos] = useState<File[]>([]);
-  const [videos, setVideos] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-
-  const fileInputPhotosRef = useRef<HTMLInputElement>(null);
-  const fileInputVideosRef = useRef<HTMLInputElement>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -36,66 +26,12 @@ export default function App() {
     setFormData(prev => ({ ...prev, formula }));
   };
 
-  // Manage photo uploads locally for premium preview
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const selected = Array.from(e.target.files);
-      setPhotos(prev => [...prev, ...selected]);
-    }
-  };
-
-  const removePhoto = (index: number) => {
-    setPhotos(prev => prev.filter((_, i) => i !== index));
-  };
-
-  // Manage video uploads locally for premium preview
-  const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const selected = Array.from(e.target.files);
-      setVideos(prev => [...prev, ...selected]);
-    }
-  };
-
-  const removeVideo = (index: number) => {
-    setVideos(prev => prev.filter((_, i) => i !== index));
-  };
-
-  // Compile submission text formatted beautifully
-  const getSubmissionText = () => {
-    let formulaLabel = formData.formula === "essential" ? "ESSENTIAL — 49$" :
-                         formData.formula === "premium" ? "PREMIUM — 99$" : "SIGNATURE — 199$";
-
-    if (isExpress) {
-      const expressSurcharge = expressType === "essential" ? "Essential Express (+15$)" :
-                               expressType === "premium" ? "Premium Express (+25$)" : "Signature Express (+50$)";
-      formulaLabel += ` [AVEC OPTION EXPRESS : ${expressSurcharge}]`;
-    }
-
-    const photosList = photos.length > 0 ? photos.map(p => p.name).join(", ") : "Aucune photo sélectionnée";
-    const videosList = videos.length > 0 ? videos.map(v => v.name).join(", ") : "Aucune vidéo sélectionnée";
-
-    return `✨ DEMANDE DIGITAL LOVE EXPERIENCE™ ✨\n\n` +
-           `👤 CLIENT : ${formData.fullName || "Non spécifié"}\n` +
-           `📧 EMAIL : ${formData.email || "Non spécifié"}\n` +
-           `📱 WHATSAPP : ${formData.whatsapp || "Non spécifié"}\n` +
-           `💎 FORMULE : ${formulaLabel}\n` +
-           `⚡ LIVRAISON : ${isExpress ? `EXPRESS (${expressType.toUpperCase()})` : "STANDARD"}\n\n` +
-           `📝 DETAILS DE LA PERSONNE CÉLÉBRÉE :\n` +
-           `• Personne à célébrer : ${formData.partnerName || "Non spécifié"}\n` +
-           `• Date de Remise : ${formData.deliveryDate || "Non spécifié"}\n` +
-           `• Projet : "${formData.projectDescription || "Non spécifié"}"\n\n` +
-           `📎 DOCUMENTS JOINTS :\n` +
-           `• Photos (${photos.length}) : ${photosList}\n` +
-           `• Vidéos (${videos.length}) : ${videosList}\n\n` +
-           `Merci d'avoir initié votre Digital Love Experience. Nous prendrons contact rapidement ! ❤️`;
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg(null);
     setSuccessMsg(null);
 
-    if (!formData.fullName || !formData.email || !formData.whatsapp || !formData.partnerName || !formData.deliveryDate) {
+    if (!formData.nom || !formData.prenom || !formData.whatsapp || !formData.experienceType) {
       setErrorMsg("Veuillez remplir tous les champs obligatoires (*) avant d'envoyer votre projet.");
       return;
     }
@@ -105,31 +41,33 @@ export default function App() {
     try {
       // Create lead persistence
       await createLead({
-        name: formData.fullName,
-        email: formData.email,
-        company: "Digital Love Client",
-        selectedExperience: "Love Story Experience",
+        name: `${formData.prenom} ${formData.nom}`,
+        email: "contact@digitalexperience.com",
+        company: "Digital Experience Client",
+        selectedExperience: formData.experienceType,
         budgetRange: formData.formula === "essential" ? "$49" : formData.formula === "premium" ? "$99" : "$199",
-        desiredDeliveryDate: formData.deliveryDate,
-        projectDescription: `Personne célébrée: ${formData.partnerName}. Détails: ${formData.projectDescription}. Photos: ${photos.length}. Vidéos: ${videos.length}${isExpress ? `. Livraison Express: ${expressType} Express` : ''}`
+        desiredDeliveryDate: "",
+        projectDescription: formData.projectDescription
       });
     } catch (err) {
       console.warn("Storage fallback warning:", err);
     }
 
     setLoading(false);
-    const submissionText = getSubmissionText();
 
-    if (sendChannel === "whatsapp") {
-      const waNumber = "18094151842"; // Standard WhatsApp contact direct
-      const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(submissionText)}`;
-      window.open(waUrl, "_blank", "noopener,noreferrer");
-      setSuccessMsg("Merci. Nous vous contacterons rapidement sur WhatsApp.");
-    } else {
-      const mailtoUrl = `mailto:laikadb.me@gmail.com?subject=${encodeURIComponent("Demande Digital Love Experience")}&body=${encodeURIComponent(submissionText)}`;
-      window.location.href = mailtoUrl;
-      setSuccessMsg("Votre application d'envoi d'e-mail s'ouvre... Envoyez pour finaliser ! ❤️");
-    }
+    const planLabel = formData.formula.toUpperCase();
+    const submissionText = `Nom : ${formData.nom}\n` +
+                           `Prénom : ${formData.prenom}\n` +
+                           `Plan : ${planLabel}\n` +
+                           `Type d'expérience : ${formData.experienceType}\n\n` +
+                           `Je souhaite créer une Digital Experience™.\n\n` +
+                           `Merci de me contacter pour l'envoi des photos et vidéos.`;
+
+    const waNumber = "18094151842"; // Standard WhatsApp contact direct
+    const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(submissionText)}`;
+    
+    window.open(waUrl, "_blank", "noopener,noreferrer");
+    setSuccessMsg("Votre demande a été préparée. Nous vous contactons sur WhatsApp !");
   };
 
   return (
@@ -870,27 +808,47 @@ export default function App() {
 
           <form onSubmit={handleSubmit} className="lg:col-span-8 relative z-10 bg-gradient-to-br from-[#2A1018]/90 to-[#4A1525]/90 border border-[#D4B483]/25 p-6 sm:p-8 rounded-2xl space-y-6 shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_30px_rgba(212,180,131,0.03)] backdrop-blur-md">
             
-            {/* Form Introduction Message */}
-            <div className="bg-[#140A0D]/40 border border-[#D4B483]/20 p-5 rounded-xl space-y-2 text-center">
+            {/* WhatsApp Information Section */}
+            <div className="bg-[#140A0D]/50 border border-[#D4B483]/20 p-5 rounded-xl space-y-2">
               <p className="text-xs sm:text-sm font-serif text-[#F8F4EE] italic">
-                Chaque expérience est créée pour célébrer une personne importante dans votre vie.
+                Après votre commande, notre équipe vous contactera sur WhatsApp.
               </p>
               <p className="text-[11px] sm:text-xs text-[#CFC4B5] leading-relaxed">
-                Qu'il s'agisse d'un partenaire, d'un parent, d'un ami ou d'un proche, nous transformons vos souvenirs en une expérience unique et mémorable.
+                Vous pourrez ensuite envoyer vos photos, vidéos et informations directement via WhatsApp.
               </p>
             </div>
 
+            {/* Special Highlights Box (Encadré) */}
+            <div className="bg-gradient-to-br from-[#33111A] to-[#521727] border border-[#D4B483]/25 p-5 rounded-xl space-y-3.5 shadow-[0_15px_30px_rgba(20,10,13,0.5)]">
+              <span className="block text-[9px] font-mono tracking-widest text-[#D4B483] uppercase font-bold">📱 Envoi ultra-simple :</span>
+              <ul className="space-y-3 text-xs text-[#CFC4B5]">
+                <li className="flex items-center gap-2.5">
+                  <span className="text-sm shrink-0">📸</span>
+                  <span>Envoyez vos photos sur WhatsApp</span>
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <span className="text-sm shrink-0">🎥</span>
+                  <span>Envoyez vos vidéos sur WhatsApp</span>
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <span className="text-sm shrink-0">💌</span>
+                  <span>Envoyez vos textes et messages sur WhatsApp</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Form Fields container */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
                 <label className="block text-[10px] font-mono tracking-wider text-[#CFC4B5] uppercase font-semibold">
-                  Nom Complet *
+                  Nom *
                 </label>
                 <input
                   type="text"
-                  name="fullName"
+                  name="nom"
                   required
-                  placeholder="ex: Marie de Castries"
-                  value={formData.fullName}
+                  placeholder="ex: de Castries"
+                  value={formData.nom}
                   onChange={handleInputChange}
                   className="w-full bg-[#140A0D]/70 text-[#F8F4EE] placeholder-[#CFC4B5]/40 text-xs px-4 py-3 border border-white/10 rounded focus:border-[#D4B483] focus:outline-none transition-all font-sans hover:border-[#D4B483]/30"
                 />
@@ -898,14 +856,14 @@ export default function App() {
 
               <div className="space-y-1.5">
                 <label className="block text-[10px] font-mono tracking-wider text-[#CFC4B5] uppercase font-semibold">
-                  Adresse Email *
+                  Prénom *
                 </label>
                 <input
-                  type="email"
-                  name="email"
+                  type="text"
+                  name="prenom"
                   required
-                  placeholder="ex: marie@exemple.com"
-                  value={formData.email}
+                  placeholder="ex: Marie"
+                  value={formData.prenom}
                   onChange={handleInputChange}
                   className="w-full bg-[#140A0D]/70 text-[#F8F4EE] placeholder-[#CFC4B5]/40 text-xs px-4 py-3 border border-white/10 rounded focus:border-[#D4B483] focus:outline-none transition-all font-sans hover:border-[#D4B483]/30"
                 />
@@ -930,304 +888,79 @@ export default function App() {
 
               <div className="space-y-1.5">
                 <label className="block text-[10px] font-mono tracking-wider text-[#CFC4B5] uppercase font-semibold">
-                  Nom de la personne à célébrer *
+                  Type d'expérience *
                 </label>
                 <input
                   type="text"
-                  name="partnerName"
+                  name="experienceType"
                   required
-                  placeholder="ex: Chloé"
-                  value={formData.partnerName}
+                  placeholder="ex: Anniversaire, Hommage, Amour..."
+                  value={formData.experienceType}
                   onChange={handleInputChange}
                   className="w-full bg-[#140A0D]/70 text-[#F8F4EE] placeholder-[#CFC4B5]/40 text-xs px-4 py-3 border border-white/10 rounded focus:border-[#D4B483] focus:outline-none transition-all font-sans hover:border-[#D4B483]/30"
                 />
-                <span className="block text-[10px] text-[#E7C9A9]/80 font-sans leading-normal">
-                  Partenaire, mari, épouse, maman, papa, enfant, ami(e), membre de la famille ou toute personne qui compte pour vous.
-                </span>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <label className="block text-[10px] font-mono tracking-wider text-[#CFC4B5] uppercase font-semibold">
-                  Date de remise *
-                </label>
-                <input
-                  type="date"
-                  name="deliveryDate"
-                  required
-                  value={formData.deliveryDate}
-                  onChange={handleInputChange}
-                  className="w-full bg-[#140A0D]/70 text-[#F8F4EE] text-xs px-4 py-3 border border-white/10 rounded focus:border-[#D4B483] focus:outline-none transition-all font-mono cursor-pointer hover:border-[#D4B483]/30"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="block text-[10px] font-mono tracking-wider text-[#CFC4B5] uppercase font-semibold">
-                  Formule choisie *
-                </label>
-                <div className="grid grid-cols-3 gap-2">
-                  {(["essential", "premium", "signature"] as const).map(f => (
-                    <button
-                      key={f}
-                      type="button"
-                      onClick={() => handleFormulaSelect(f)}
-                      className={`py-2 px-1 text-[9px] font-mono uppercase rounded border transition-all text-center flex flex-col items-center justify-center cursor-pointer ${
-                        formData.formula === f
-                          ? "bg-gradient-to-r from-[#D4B483]/20 to-[#E7C9A9]/20 border-[#D4B483] text-[#F8F4EE] font-medium shadow-[0_0_15px_rgba(212,180,131,0.1)]"
-                          : "bg-[#140A0D]/75 border-white/10 text-[#CFC4B5] hover:border-[#D4B483]/50"
-                      }`}
-                    >
-                      <span className="text-[11px] mb-0.5">{f === "essential" ? "❤️" : f === "premium" ? "💎" : "👑"}</span>
-                      {f}
-                    </button>
-                  ))}
-                </div>
               </div>
             </div>
 
             <div className="space-y-1.5">
               <label className="block text-[10px] font-mono tracking-wider text-[#CFC4B5] uppercase font-semibold">
-                Décrivez votre projet *
+                Plan choisi *
+              </label>
+              <div className="grid grid-cols-3 gap-2">
+                {(["essential", "premium", "signature"] as const).map(f => (
+                  <button
+                    key={f}
+                    type="button"
+                    onClick={() => handleFormulaSelect(f)}
+                    className={`py-2 px-1 text-[9px] font-mono uppercase rounded border transition-all text-center flex flex-col items-center justify-center cursor-pointer ${
+                      formData.formula === f
+                        ? "bg-gradient-to-r from-[#D4B483]/20 to-[#E7C9A9]/20 border-[#D4B483] text-[#F8F4EE] font-medium shadow-[0_0_15px_rgba(212,180,131,0.1)]"
+                        : "bg-[#140A0D]/75 border-white/10 text-[#CFC4B5] hover:border-[#D4B483]/50"
+                    }`}
+                  >
+                    <span className="text-[11px] mb-0.5">{f === "essential" ? "❤️" : f === "premium" ? "💎" : "👑"}</span>
+                    {f}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="block text-[10px] font-mono tracking-wider text-[#CFC4B5] uppercase font-semibold">
+                Message ou instructions spéciales
               </label>
               <textarea
                 name="projectDescription"
-                required
                 rows={4}
                 value={formData.projectDescription}
                 onChange={handleInputChange}
-                placeholder="Parlez-nous de votre histoire, de l'occasion et de ce que vous souhaitez créer."
+                placeholder="Ajoutez ici vos souhaits, notes spécifiques ou demandes particulières."
                 className="w-full bg-[#140A0D]/70 text-[#F8F4EE] placeholder-[#CFC4B5]/40 text-xs px-4 py-3 border border-white/10 rounded focus:border-[#D4B483] focus:outline-none transition-all font-sans resize-none hover:border-[#D4B483]/30"
               />
-            </div>
-
-            {/* Express Option Choice Checker */}
-            <div className="p-4 bg-gradient-to-br from-[#33111A]/55 to-[#521727]/55 border border-[#D4B483]/30 rounded-xl space-y-4 shadow-[0_5px_15px_rgba(20,10,13,0.3)]">
-              <label className="flex items-center gap-3 cursor-pointer select-none">
-                <input
-                  type="checkbox"
-                  checked={isExpress}
-                  onChange={(e) => {
-                    setIsExpress(e.target.checked);
-                    if (e.target.checked) {
-                      setExpressType(formData.formula);
-                    }
-                  }}
-                  className="rounded border-[#D4B483]/30 bg-[#140A0D] text-[#D4B483] focus:ring-[#D4B483]/50 w-4 h-4 cursor-pointer"
-                />
-                <span className="text-xs sm:text-sm font-serif text-[#F8F4EE] flex items-center gap-1.5 font-medium">
-                  ⚡ Je souhaite une livraison express
-                </span>
-              </label>
-
-              <AnimatePresence>
-                {isExpress && (
-                  <motion.div 
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="space-y-3 overflow-hidden"
-                  >
-                    <span className="block text-[10px] font-mono tracking-wider text-[#CFC4B5] uppercase font-semibold">
-                      Type de livraison express souhaitée :
-                    </span>
-                    
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                      {[
-                        { id: "essential", label: "Essential Express", price: "+15$" },
-                        { id: "premium", label: "Premium Express", price: "+25$" },
-                        { id: "signature", label: "Signature Express", price: "+50$" },
-                      ].map((opt) => (
-                        <label 
-                          key={opt.id}
-                          className={`flex items-center justify-between p-3 rounded-lg border cursor-pointer select-none transition-all ${
-                            expressType === opt.id 
-                              ? "bg-gradient-to-r from-[#D4B483]/15 to-[#E7C9A9]/15 border-[#D4B483] text-[#F8F4EE] shadow-[0_0_12px_rgba(212,180,131,0.08)]" 
-                              : "bg-[#140A0D]/75 border-[#D4B483]/10 text-[#CFC4B5] hover:border-[#D4B483]/40"
-                          }`}
-                        >
-                          <div className="flex items-center gap-2">
-                            <input
-                              type="radio"
-                              name="expressType"
-                              value={opt.id}
-                              checked={expressType === opt.id}
-                              onChange={() => setExpressType(opt.id as any)}
-                              className="sr-only"
-                            />
-                            <span className="text-[10px] font-mono tracking-wider uppercase">{opt.label}</span>
-                          </div>
-                          <span className="text-[10px] font-mono font-bold text-[#D4B483]">{opt.price}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              {/* Trust block statement requested */}
-              <p className="text-[10px] text-[#CFC4B5]/85 italic">
-                Chaque expérience est créée spécialement pour vous. Nous acceptons uniquement un nombre limité de projets express.
-              </p>
-            </div>
-
-            {/* Premium upload files zones */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-              {/* Photo Upload Card */}
-              <div className="p-4 bg-gradient-to-br from-[#2A1018] to-[#4A1525] border border-[#D4B483]/20 rounded-lg space-y-3 shadow-[0_5px_15px_rgba(20,10,13,0.15)]">
-                <div className="flex items-center justify-between">
-                  <label className="block text-[10px] font-mono tracking-wider text-[#CFC4B5] uppercase font-semibold">
-                    Upload Photos
-                  </label>
-                  <span className="text-[9px] font-mono text-[#D4B483]">({photos.length} sélectionnée{photos.length !== 1 && 's'})</span>
-                </div>
-                
-                <input
-                  type="file"
-                  ref={fileInputPhotosRef}
-                  multiple
-                  accept="image/*"
-                  onChange={handlePhotoChange}
-                  className="hidden"
-                />
-
-                <div 
-                  onClick={() => fileInputPhotosRef.current?.click()}
-                  className="border border-dashed border-[#D4B483]/30 hover:border-[#D4B483] rounded-md p-4 text-center cursor-pointer hover:bg-[#D4B483]/5 transition-all flex flex-col items-center justify-center gap-1"
-                >
-                  <Upload className="w-4 h-4 text-[#CFC4B5]" />
-                  <span className="text-[10px] text-[#CFC4B5] font-mono">Ajouter des photos</span>
-                </div>
-
-                {photos.length > 0 && (
-                  <div className="max-h-24 overflow-y-auto space-y-1 pr-1">
-                    {photos.map((p, idx) => (
-                      <div key={idx} className="flex items-center justify-between bg-[#140A0D]/60 border border-white/5 text-[9px] font-mono px-2 py-1 rounded">
-                        <span className="truncate max-w-[140px] text-[#F8F4EE]">{p.name}</span>
-                        <button type="button" onClick={() => removePhoto(idx)} className="text-rose-400 hover:text-rose-300">
-                          <X className="w-3 h-3" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Video Upload Card */}
-              <div className="p-4 bg-gradient-to-br from-[#2A1018] to-[#4A1525] border border-[#D4B483]/20 rounded-lg space-y-3 shadow-[0_5px_15px_rgba(20,10,13,0.15)]">
-                <div className="flex items-center justify-between">
-                  <label className="block text-[10px] font-mono tracking-wider text-[#CFC4B5] uppercase font-semibold">
-                    Upload Vidéos (Optional)
-                  </label>
-                  <span className="text-[9px] font-mono text-[#D4B483]">({videos.length} sélectionnée{videos.length !== 1 && 's'})</span>
-                </div>
-
-                <input
-                  type="file"
-                  ref={fileInputVideosRef}
-                  multiple
-                  accept="video/*"
-                  onChange={handleVideoChange}
-                  className="hidden"
-                />
-
-                <div 
-                  onClick={() => fileInputVideosRef.current?.click()}
-                  className="border border-dashed border-[#D4B483]/30 hover:border-[#D4B483] rounded-md p-4 text-center cursor-pointer hover:bg-[#D4B483]/5 transition-all flex flex-col items-center justify-center gap-1"
-                >
-                  <Upload className="w-4 h-4 text-[#CFC4B5]" />
-                  <span className="text-[10px] text-[#CFC4B5] font-mono">Ajouter des vidéos</span>
-                </div>
-
-                {videos.length > 0 && (
-                  <div className="max-h-24 overflow-y-auto space-y-1 pr-1">
-                    {videos.map((v, idx) => (
-                      <div key={idx} className="flex items-center justify-between bg-[#140A0D]/60 border border-white/5 text-[9px] font-mono px-2 py-1 rounded">
-                        <span className="truncate max-w-[140px] text-[#F8F4EE]">{v.name}</span>
-                        <button type="button" onClick={() => removeVideo(idx)} className="text-rose-400 hover:text-rose-300">
-                          <X className="w-3 h-3" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* SENDING CANAL CHOOSER (Required options for WhatsApp or E-mail dispatch) */}
-            <div className="p-4 bg-gradient-to-br from-[#33111A]/70 to-[#521727]/70 border border-[#D4B483]/20 rounded-lg space-y-3 shadow-[0_8px_20px_rgba(20,10,13,0.3)]">
-              <span className="block text-[9px] font-mono tracking-widest text-[#D4B483] uppercase font-bold text-center">
-                Choisissez votre canal de dispatch :
-              </span>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <label className={`flex items-center justify-center gap-2.5 p-3 rounded border cursor-pointer select-none transition-all ${
-                  sendChannel === "whatsapp" 
-                    ? "bg-emerald-950/30 border-emerald-500/50 text-emerald-400 font-semibold text-[11px] shadow-[0_0_15px_rgba(16,185,129,0.1)]" 
-                    : "bg-[#140A0D]/60 border-[#D4B483]/15 text-[#CFC4B5] hover:border-[#D4B483]/30 text-[11px]"
-                }`}>
-                  <input
-                    type="radio"
-                    name="sendChannel"
-                    value="whatsapp"
-                    checked={sendChannel === "whatsapp"}
-                    onChange={() => setSendChannel("whatsapp")}
-                    className="sr-only"
-                  />
-                  <span>🟢 WhatsApp Direct</span>
-                </label>
-
-                <label className={`flex items-center justify-center gap-2.5 p-3 rounded border cursor-pointer select-none transition-all ${
-                  sendChannel === "email" 
-                    ? "bg-[#D4B483]/20 border-[#D4B483]/45 text-[#D4B483] font-semibold text-[11px] shadow-[0_0_15px_rgba(212,180,131,0.15)]" 
-                    : "bg-[#140A0D]/60 border-[#D4B483]/15 text-[#CFC4B5] hover:border-[#D4B483]/30 text-[11px]"
-                }`}>
-                  <input
-                    type="radio"
-                    name="sendChannel"
-                    value="email"
-                    checked={sendChannel === "email"}
-                    onChange={() => setSendChannel("email")}
-                    className="sr-only"
-                  />
-                  <span>✉️ E-mail Officiel</span>
-                </label>
-              </div>
             </div>
 
             {/* Error & Success status displays */}
             <AnimatePresence>
               {errorMsg && (
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="p-3 bg-rose-950/25 border border-rose-500/30 text-rose-300 text-xs text-center font-sans">
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="p-3 bg-rose-950/25 border border-rose-500/30 text-rose-300 text-xs text-center font-sans rounded">
                   {errorMsg}
                 </motion.div>
               )}
               {successMsg && (
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="p-4 bg-emerald-950/30 border border-emerald-500/30 text-emerald-300 text-sm font-sans text-center rounded">
-                  <p className="font-bold mb-1">✓ Demande Enregistrée !</p>
+                  <p className="font-bold mb-1">✓ Demande Préparée !</p>
                   <p className="text-xs text-[#F8F4EE]">{successMsg}</p>
                 </motion.div>
               )}
             </AnimatePresence>
 
-            {/* Premium Ordering Confirmation Policy Note */}
-            <div className="bg-[#140A0D]/60 border border-[#D4B483]/15 p-4 rounded-xl text-center text-xs text-[#CFC4B5] leading-relaxed">
-              <p>
-                Une fois votre demande envoyée, nous vous contacterons sur WhatsApp pour discuter de votre projet, répondre à vos questions et vous transmettre les informations de paiement.
-              </p>
-            </div>
-
             <button
               type="submit"
               disabled={loading}
-              className={`w-full py-4 rounded text-xs font-mono tracking-widest uppercase font-bold transition-all duration-300 cursor-pointer flex items-center justify-center gap-2 border ${
-                sendChannel === "whatsapp"
-                  ? "bg-emerald-600 border-emerald-500 hover:bg-emerald-500 text-white shadow-[0_4px_20px_rgba(16,185,129,0.2)]"
-                  : "bg-gradient-to-r from-[#D4B483] to-[#E7C9A9] hover:from-[#E7C9A9] hover:to-[#F8F4EE] text-[#140A0D] border-[#E7C9A9]/20 shadow-[0_5px_22px_rgba(212,180,131,0.3)] hover:scale-[1.01] hover:shadow-[0_8px_30px_rgba(212,180,131,0.55)]"
-              }`}
+              className="w-full py-4 rounded text-xs font-mono tracking-widest uppercase font-bold transition-all duration-300 cursor-pointer flex items-center justify-center gap-2 border bg-emerald-600 border-emerald-500 hover:bg-emerald-500 text-white shadow-[0_4px_20px_rgba(16,185,129,0.2)]"
             >
               <span>
-                {loading ? "TRAITEMENT..." : "❤️ Envoyer Mon Projet"}
+                {loading ? "TRAITEMENT..." : "🟢 COMMANDER VIA WHATSAPP"}
               </span>
             </button>
           </form>
